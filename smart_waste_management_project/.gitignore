@@ -1,0 +1,19 @@
+# Maven generated files
+target/
+
+# STS / Eclipse files
+.settings/
+.project
+.classpath
+.springBeans
+
+# Local environment files
+.env
+application-local.properties
+
+# Log files
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
