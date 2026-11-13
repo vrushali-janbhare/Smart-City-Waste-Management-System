@@ -40,7 +40,9 @@ public class Vehicles {
 	private LocalDateTime created_at;
 	
 	
-	@OneToMany(mappedBy ="Vehicle",fetch = FetchType.LAZY)
-	@JsonIgnoreProperties("Vehicle")
-	private Set<CollectionSchedule>CollectionSchedule;
+	@OneToMany(mappedBy ="vehicle",fetch = FetchType.LAZY)
+	@JsonIgnoreProperties("vehicle")
+	private Set<Collection_Schedules>Collection_Schedule;
+	
+
 }
