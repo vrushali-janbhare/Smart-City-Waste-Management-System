@@ -93,4 +93,181 @@ public class User {
 	@OneToMany(mappedBy = "users",fetch = FetchType.LAZY)
 	@JsonIgnoreProperties("users")
 	private Set<Complaint_Status_History>Complaint_Status_Historys;
+
+	public long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(long user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getFull_name() {
+		return full_name;
+	}
+
+	public void setFull_name(String full_name) {
+		this.full_name = full_name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public UserRole getRole() {
+		return role;
+	}
+
+	public void setRole(UserRole role) {
+		this.role = role;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public boolean isIs_active() {
+		return is_active;
+	}
+
+	public void setIs_active(boolean is_active) {
+		this.is_active = is_active;
+	}
+
+	public LocalDateTime getCreated_at() {
+		return created_at;
+	}
+
+	public void setCreated_at(LocalDateTime created_at) {
+		this.created_at = created_at;
+	}
+
+	public LocalDateTime getUpdated_at() {
+		return updated_at;
+	}
+
+	public void setUpdated_at(LocalDateTime updated_at) {
+		this.updated_at = updated_at;
+	}
+
+	public Area getAreas() {
+		return areas;
+	}
+
+	public void setAreas(Area areas) {
+		this.areas = areas;
+	}
+
+	public Worker getWorker() {
+		return worker;
+	}
+
+	public void setWorker(Worker worker) {
+		this.worker = worker;
+	}
+
+	public Set<Complaints> getComplaints() {
+		return complaints;
+	}
+
+	public void setComplaints(Set<Complaints> complaints) {
+		this.complaints = complaints;
+	}
+
+	public Set<Notifications> getNotification() {
+		return Notification;
+	}
+
+	public void setNotification(Set<Notifications> notification) {
+		Notification = notification;
+	}
+
+	public Set<Feedback> getFeedback() {
+		return feedback;
+	}
+
+	public void setFeedback(Set<Feedback> feedback) {
+		this.feedback = feedback;
+	}
+
+	public Set<Bulk_Pickup_Requests> getBulk_Pickup_Request() {
+		return Bulk_Pickup_Request;
+	}
+
+	public void setBulk_Pickup_Request(Set<Bulk_Pickup_Requests> bulk_Pickup_Request) {
+		Bulk_Pickup_Request = bulk_Pickup_Request;
+	}
+
+	public Set<Fines> getFines() {
+		return Fines;
+	}
+
+	public void setFines(Set<Fines> fines) {
+		Fines = fines;
+	}
+
+	public Set<Complaint_Status_History> getComplaint_Status_Historys() {
+		return Complaint_Status_Historys;
+	}
+
+	public void setComplaint_Status_Historys(Set<Complaint_Status_History> complaint_Status_Historys) {
+		Complaint_Status_Historys = complaint_Status_Historys;
+	}
+
+	public User(long user_id, String full_name, String email,
+			@Pattern(regexp = "^[0-9]{10}$", message = "Phone number must contain exactly 10 digits") String phone,
+			String password, UserRole role, String address, boolean is_active, LocalDateTime created_at,
+			LocalDateTime updated_at, Area areas, Worker worker, Set<Complaints> complaints,
+			Set<Notifications> notification, Set<Feedback> feedback, Set<Bulk_Pickup_Requests> bulk_Pickup_Request,
+			Set<mypackage.model.Fines> fines, Set<Complaint_Status_History> complaint_Status_Historys) {
+		super();
+		this.user_id = user_id;
+		this.full_name = full_name;
+		this.email = email;
+		this.phone = phone;
+		this.password = password;
+		this.role = role;
+		this.address = address;
+		this.is_active = is_active;
+		this.created_at = created_at;
+		this.updated_at = updated_at;
+		this.areas = areas;
+		this.worker = worker;
+		this.complaints = complaints;
+		Notification = notification;
+		this.feedback = feedback;
+		Bulk_Pickup_Request = bulk_Pickup_Request;
+		Fines = fines;
+		Complaint_Status_Historys = complaint_Status_Historys;
+	}
+
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
 }
