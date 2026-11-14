@@ -1,5 +1,7 @@
 package mypackage.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface Notifications_Repository {
+import mypackage.model.*;
+public interface Notifications_Repository extends JpaRepository<Notifications, Long>{
 
 }

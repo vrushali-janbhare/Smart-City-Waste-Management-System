@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDateTime;
 import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
+
 @Entity
 @Table(name="areas")
 public class Area {

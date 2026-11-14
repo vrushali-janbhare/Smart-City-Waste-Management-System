@@ -1,5 +1,8 @@
 package mypackage.repository;
 
-public interface Complaints_Repository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import mypackage.model.*;
+public interface Complaints_Repository extends JpaRepository<Complaints, Long> {
 
 }

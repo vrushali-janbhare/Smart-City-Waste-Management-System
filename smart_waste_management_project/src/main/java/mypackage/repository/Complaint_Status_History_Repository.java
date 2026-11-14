@@ -1,5 +1,7 @@
 package mypackage.repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface Complaint_Status_History_Repository {
+import mypackage.model.*;
+public interface Complaint_Status_History_Repository extends JpaRepository<Complaint_Status_History, Long> {
 
 }
