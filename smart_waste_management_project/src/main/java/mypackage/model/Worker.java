@@ -19,14 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
-@Table(name="worker")
+@Table(name="workers")
 public class Worker {
 
 	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int worker_id;
+	private long worker_id;
 	
 	@Column(name="joining_date",nullable=true)
 	private  LocalDate  joining_date;
@@ -37,14 +37,93 @@ public class Worker {
 	
 	@OneToOne()
 	@JoinColumn(name="user_id",nullable=false,unique = true)
-	private User user;
+	private User users;
 	
-	@OneToMany(mappedBy = "workes")
-	@JsonIgnoreProperties("workes")
+	@OneToMany(mappedBy = "workers")
+	@JsonIgnoreProperties("workers")
 	private Set<Collection_Crew_Members>Collection_Crew_Member;
 	
-	@OneToMany(mappedBy = "workes")
-	@JsonIgnoreProperties("workes")
+	@OneToMany(mappedBy = "workers")
+	@JsonIgnoreProperties("workers")
+	private Set<Complaints>complaint;
+	
+	@OneToMany(mappedBy = "workers")
+	@JsonIgnoreProperties("workers")
    private Set<Collection_Records>Collection_Record;
+
+	public long getWorker_id() {
+		return worker_id;
+	}
+
+	public void setWorker_id(long worker_id) {
+		this.worker_id = worker_id;
+	}
+
+	public LocalDate getJoining_date() {
+		return joining_date;
+	}
+
+	public void setJoining_date(LocalDate joining_date) {
+		this.joining_date = joining_date;
+	}
+
+	public WorkerStatus getAvailability_status() {
+		return availability_status;
+	}
+
+	public void setAvailability_status(WorkerStatus availability_status) {
+		this.availability_status = availability_status;
+	}
+
+	public User getUsers() {
+		return users;
+	}
+
+	public void setUsers(User users) {
+		this.users = users;
+	}
+
+	public Set<Collection_Crew_Members> getCollection_Crew_Member() {
+		return Collection_Crew_Member;
+	}
+
+	public void setCollection_Crew_Member(Set<Collection_Crew_Members> collection_Crew_Member) {
+		Collection_Crew_Member = collection_Crew_Member;
+	}
+
+	public Set<Complaints> getComplaint() {
+		return complaint;
+	}
+
+	public void setComplaint(Set<Complaints> complaint) {
+		this.complaint = complaint;
+	}
+
+	public Set<Collection_Records> getCollection_Record() {
+		return Collection_Record;
+	}
+
+	public void setCollection_Record(Set<Collection_Records> collection_Record) {
+		Collection_Record = collection_Record;
+	}
+
+	public Worker(long worker_id, LocalDate joining_date, WorkerStatus availability_status, User users,
+			Set<Collection_Crew_Members> collection_Crew_Member, Set<Complaints> complaint,
+			Set<Collection_Records> collection_Record) {
+		super();
+		this.worker_id = worker_id;
+		this.joining_date = joining_date;
+		this.availability_status = availability_status;
+		this.users = users;
+		Collection_Crew_Member = collection_Crew_Member;
+		this.complaint = complaint;
+		Collection_Record = collection_Record;
+	}
+
+	public Worker() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+   
 
 }
