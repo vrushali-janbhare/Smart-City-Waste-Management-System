@@ -1,0 +1,17 @@
+
+# Ignore application configuration
+src/main/resources/application.properties
+
+# Ignore build files
+target/
+
+# Ignore IDE files
+.classpath
+.project
+.settings/
+.sts4-cache/
+.idea/
+.vscode/
+
+# Ignore log files
+*.log
