@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import mypackage.model.CollectionCrewMember;
 import mypackage.service.CollectionCrewMember_Service;
 
-@RestController
-@RequestMapping("/api/collection-crew-members")
+//@RestController
+//@RequestMapping("/api/collection-crew-members")
 public class CollectionCrewMember_Controller {
 
     @Autowired

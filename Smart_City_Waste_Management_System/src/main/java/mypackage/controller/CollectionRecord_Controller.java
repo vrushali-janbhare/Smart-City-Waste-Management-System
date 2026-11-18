@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import mypackage.model.CollectionRecord;
 import mypackage.service.CollectionRecord_Service;
-
-@RestController
-@RequestMapping("/api/collection-records")
+//
+//@RestController
+//@RequestMapping("/api/collection-records")
 public class CollectionRecord_Controller {
 
     @Autowired

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import mypackage.model.CollectionScheduleDay;
 import mypackage.service.CollectionScheduleDay_Service;
 
-@RestController
-@RequestMapping("/api/collection-schedule-days")
+//@RestController
+//@RequestMapping("/api/collection-schedule-days")
 public class CollectionScheduleDay_Controller {
 
     @Autowired
