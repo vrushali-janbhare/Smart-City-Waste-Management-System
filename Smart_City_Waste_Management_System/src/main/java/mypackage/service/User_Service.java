@@ -17,6 +17,7 @@ import mypackage.model.Role;
 import mypackage.dto.UserResponseDTO;
 import mypackage.dto.UserRegistrationDTO;
 import mypackage.dto.UserProfileUpdateDTO;
+import mypackage.dto.AdminProfileUpdateDTO;
 
 import mypackage.repository.User_Repository;
 import mypackage.repository.Role_Repository;
@@ -45,9 +46,7 @@ public class User_Service {
         dto.setPhoneNumber(user.getPhoneNumber());
         dto.setAddress(user.getAddress());
 
-        dto.setRoleName(
-                user.getRole().getRoleName()
-        );
+        dto.setRoleName(user.getRole().getRoleName());
 
         return dto;
     }
@@ -262,7 +261,7 @@ public class User_Service {
     }
 
 
-    // 8. NEW - Update logged-in citizen profile
+    // 8. Update logged-in citizen profile
     @Transactional
     public UserResponseDTO updateMyProfile(
             Long userId,
@@ -364,6 +363,89 @@ public class User_Service {
         existingUser.setAddress(address);
 
         // Password and role are not changed
+        User savedUser =
+                userRepository.save(existingUser);
+
+        return convertToDTO(savedUser);
+    }
+
+
+    // 9. Update logged-in Admin profile
+    @Transactional
+    public UserResponseDTO updateAdminProfile(
+            Long userId,
+            AdminProfileUpdateDTO request) {
+
+        if (request == null ||
+                request.getFullName() == null ||
+                request.getPhoneNumber() == null ||
+                request.getAddress() == null) {
+
+            throw new IllegalArgumentException(
+                    "All profile fields are required"
+            );
+        }
+
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Admin account not found"
+                ));
+
+        // Verify role from the database
+        if (existingUser.getRole() == null ||
+                !"ADMIN".equals(
+                        existingUser.getRole().getRoleName())) {
+
+            throw new IllegalArgumentException(
+                    "Only admins can update this profile"
+            );
+        }
+
+        String fullName = request.getFullName().trim();
+        String phone = request.getPhoneNumber().trim();
+        String address = request.getAddress().trim();
+
+        if (fullName.isEmpty() ||
+                phone.isEmpty() ||
+                address.isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "All profile fields are required"
+            );
+        }
+
+        if (fullName.length() > 100 ||
+                phone.length() > 15 ||
+                address.length() > 255) {
+
+            throw new IllegalArgumentException(
+                    "One or more profile fields are too long"
+            );
+        }
+
+        if (!phone.matches("^[0-9+() -]{7,15}$")) {
+            throw new IllegalArgumentException(
+                    "Enter a valid phone number"
+            );
+        }
+
+        Optional<User> phoneUser =
+                userRepository.findByPhoneNumber(phone);
+
+        if (phoneUser.isPresent() &&
+                !phoneUser.get().getUserId()
+                        .equals(userId)) {
+
+            throw new IllegalArgumentException(
+                    "Phone number is already registered"
+            );
+        }
+
+        existingUser.setFullName(fullName);
+        existingUser.setPhoneNumber(phone);
+        existingUser.setAddress(address);
+
+        // Email, password and role remain unchanged
         User savedUser =
                 userRepository.save(existingUser);
 

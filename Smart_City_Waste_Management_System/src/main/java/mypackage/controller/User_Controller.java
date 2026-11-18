@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import mypackage.dto.UserResponseDTO;
 import mypackage.dto.UserRegistrationDTO;
 import mypackage.dto.UserProfileUpdateDTO;
+import mypackage.dto.AdminProfileUpdateDTO;
 import mypackage.model.User;
 import mypackage.service.User_Service;
 
@@ -25,7 +26,7 @@ public class User_Controller {
     private User_Service userService;
 
 
-    // 1. Register new user
+    // 1. Register new citizen
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(
             @RequestBody UserRegistrationDTO request) {
@@ -82,7 +83,6 @@ public class User_Controller {
 
 
     // 4. Get user by ID
-    // Accept only numeric user IDs
     @GetMapping("/{userId:\\d+}")
     public ResponseEntity<UserResponseDTO> getUserById(
             @PathVariable Long userId) {
@@ -94,7 +94,6 @@ public class User_Controller {
 
 
     // 5. Update user by ID
-    // Accept only numeric user IDs
     @PutMapping("/{userId:\\d+}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable Long userId,
@@ -130,12 +129,22 @@ public class User_Controller {
         return userService.login(email, password)
                 .<ResponseEntity<?>>map(user -> {
 
-                    session.setAttribute(
+                    // Prevent session fixation on login
+                    session.invalidate();
+
+                    // Create a fresh session
+                    HttpSession newSession =
+                            ((org.springframework.web.context.request.ServletRequestAttributes)
+                            org.springframework.web.context.request.RequestContextHolder
+                                    .currentRequestAttributes())
+                                    .getRequest().getSession(true);
+
+                    newSession.setAttribute(
                             "loggedInUserId",
                             user.getUserId()
                     );
 
-                    session.setAttribute(
+                    newSession.setAttribute(
                             "loggedInUserRole",
                             user.getRoleName()
                     );
@@ -241,8 +250,63 @@ public class User_Controller {
     }
 
 
-    // 9. Delete user by ID
-    // Accept only numeric user IDs
+    // 9. Update logged-in Admin profile
+    @PutMapping("/admin/profile")
+    public ResponseEntity<?> updateAdminProfile(
+            @RequestBody AdminProfileUpdateDTO request,
+            HttpSession session) {
+
+        Long userId = (Long) session.getAttribute(
+                "loggedInUserId"
+        );
+
+        String role = (String) session.getAttribute(
+                "loggedInUserRole"
+        );
+
+        if (userId == null) {
+
+            return ResponseEntity.status(401).body(
+                    Collections.singletonMap(
+                            "message",
+                            "Please log in to update your profile"
+                    )
+            );
+        }
+
+        if (!"ADMIN".equals(role)) {
+
+            return ResponseEntity.status(403).body(
+                    Collections.singletonMap(
+                            "message",
+                            "Only admins can update this profile"
+                    )
+            );
+        }
+
+        try {
+
+            UserResponseDTO updatedAdmin =
+                    userService.updateAdminProfile(
+                            userId,
+                            request
+                    );
+
+            return ResponseEntity.ok(updatedAdmin);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.badRequest().body(
+                    Collections.singletonMap(
+                            "message",
+                            e.getMessage()
+                    )
+            );
+        }
+    }
+
+
+    // 10. Delete user by ID
     @DeleteMapping("/{userId:\\d+}")
     public ResponseEntity<Void> deleteUser(
             @PathVariable Long userId) {
@@ -259,7 +323,7 @@ public class User_Controller {
     }
 
 
-    // 10. Logout user
+    // 11. Logout user
     @PostMapping("/logout")
     public ResponseEntity<?> logout(
             HttpSession session) {

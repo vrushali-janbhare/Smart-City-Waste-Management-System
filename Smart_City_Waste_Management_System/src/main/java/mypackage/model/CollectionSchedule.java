@@ -28,15 +28,19 @@ public class CollectionSchedule {
     @Column(name = "schedule_id")
     private Long scheduleId;
 
+    // Name of the collection schedule
+    @Column(name = "schedule_name", nullable = false, length = 100)
+    private String scheduleName;
+
     // Many schedules can belong to one area
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "area_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "area_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Area area;
 
     // Many schedules can use one vehicle
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "vehicle_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Vehicle vehicle;
 
@@ -55,17 +59,17 @@ public class CollectionSchedule {
     @Column(name = "schedule_status", nullable = false, length = 30)
     private String scheduleStatus;
 
-    // One schedule can have multiple schedule days
+    // One schedule has multiple collection days
     @OneToMany(mappedBy = "schedule")
     @JsonIgnore
     private Set<CollectionScheduleDay> scheduleDays;
 
-    // One schedule can have multiple crew members
+    // One schedule has multiple crew members
     @OneToMany(mappedBy = "schedule")
     @JsonIgnore
     private Set<CollectionCrewMember> crewMembers;
 
-    // One schedule can have multiple collection records
+    // One schedule has multiple collection records
     @OneToMany(mappedBy = "schedule")
     @JsonIgnore
     private Set<CollectionRecord> collectionRecords;
@@ -78,6 +82,14 @@ public class CollectionSchedule {
 
     public void setScheduleId(Long scheduleId) {
         this.scheduleId = scheduleId;
+    }
+
+    public String getScheduleName() {
+        return scheduleName;
+    }
+
+    public void setScheduleName(String scheduleName) {
+        this.scheduleName = scheduleName;
     }
 
     public Area getArea() {

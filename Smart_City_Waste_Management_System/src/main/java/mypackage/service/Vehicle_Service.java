@@ -19,54 +19,48 @@ public class Vehicle_Service {
     @Autowired
     private Vehicle_Repository vehicleRepository;
 
-    // ==========================================
     // Validate Vehicle Information
-    // ==========================================
-
     private void validateVehicle(Vehicle vehicle) {
 
         if (vehicle == null) {
             throw new IllegalArgumentException(
-                "Vehicle details are required.");
+                    "Vehicle details are required.");
         }
 
         if (vehicle.getVehicleNumber() == null ||
-            vehicle.getVehicleNumber().trim().isEmpty()) {
-
+                vehicle.getVehicleNumber().trim().isEmpty()) {
             throw new IllegalArgumentException(
-                "Vehicle number is required.");
+                    "Vehicle number is required.");
         }
 
         if (vehicle.getVehicleType() == null ||
-            vehicle.getVehicleType().trim().isEmpty()) {
-
+                vehicle.getVehicleType().trim().isEmpty()) {
             throw new IllegalArgumentException(
-                "Vehicle type is required.");
+                    "Vehicle type is required.");
         }
 
         if (vehicle.getCapacityKg() == null ||
-            vehicle.getCapacityKg().compareTo(BigDecimal.ZERO) <= 0) {
-
+                vehicle.getCapacityKg().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(
-                "Vehicle capacity must be greater than zero.");
+                    "Vehicle capacity must be greater than zero.");
         }
 
         if (vehicle.getVehicleNumber().trim().length() > 30) {
             throw new IllegalArgumentException(
-                "Vehicle number cannot exceed 30 characters.");
+                    "Vehicle number cannot exceed 30 characters.");
         }
 
         if (vehicle.getVehicleType().trim().length() > 50) {
             throw new IllegalArgumentException(
-                "Vehicle type cannot exceed 50 characters.");
+                    "Vehicle type cannot exceed 50 characters.");
         }
 
-        if (vehicle.getCapacityKg().scale() > 2 ||
-            vehicle.getCapacityKg().precision()
-                - vehicle.getCapacityKg().scale() > 8) {
+        BigDecimal capacity = vehicle.getCapacityKg();
 
+        if (capacity.compareTo(new BigDecimal("99999999.99")) > 0 ||
+                capacity.stripTrailingZeros().scale() > 2) {
             throw new IllegalArgumentException(
-                "Capacity must fit DECIMAL(10,2).");
+                    "Capacity must fit DECIMAL(10,2).");
         }
 
         String status = vehicle.getVehicleStatus();
@@ -78,113 +72,90 @@ public class Vehicle_Service {
         status = status.trim().toUpperCase(Locale.ROOT);
 
         if (!status.equals("AVAILABLE") &&
-            !status.equals("IN_USE") &&
-            !status.equals("MAINTENANCE")) {
-
+                !status.equals("IN_USE") &&
+                !status.equals("MAINTENANCE")) {
             throw new IllegalArgumentException(
-                "Vehicle status must be AVAILABLE, IN_USE or MAINTENANCE.");
+                    "Vehicle status must be AVAILABLE, IN_USE or MAINTENANCE.");
         }
 
-        // Normalize values before saving.
         vehicle.setVehicleNumber(
-            vehicle.getVehicleNumber()
-                .trim()
-                .toUpperCase(Locale.ROOT)
-        );
+                vehicle.getVehicleNumber()
+                        .trim()
+                        .toUpperCase(Locale.ROOT));
 
         vehicle.setVehicleType(
-            vehicle.getVehicleType().trim()
-        );
+                vehicle.getVehicleType().trim());
 
         vehicle.setVehicleStatus(status);
     }
 
-    // ==========================================
     // Check Duplicate Vehicle Number
-    // ==========================================
-
     private void checkDuplicateVehicleNumber(
             String vehicleNumber,
             Long currentVehicleId) {
 
         Optional<Vehicle> existing =
-            vehicleRepository.findByVehicleNumberIgnoreCase(
-                vehicleNumber);
+                vehicleRepository.findByVehicleNumberIgnoreCase(
+                        vehicleNumber);
 
         if (existing.isPresent()) {
-
             if (currentVehicleId == null ||
-                !existing.get().getVehicleId()
-                    .equals(currentVehicleId)) {
+                    !existing.get().getVehicleId()
+                            .equals(currentVehicleId)) {
 
                 throw new IllegalArgumentException(
-                    "Vehicle number already exists.");
+                        "Vehicle number already exists.");
             }
         }
     }
 
-    // ==========================================
-    // Add New Vehicle
-    // ==========================================
-
+    // POST - Add Vehicle
     @Transactional
     public Vehicle saveVehicle(Vehicle vehicle) {
 
         validateVehicle(vehicle);
 
         checkDuplicateVehicleNumber(
-            vehicle.getVehicleNumber(),
-            null
-        );
+                vehicle.getVehicleNumber(),
+                null);
 
-        // Create a new object so clients cannot
-        // insert an ID or modify relationships.
         Vehicle newVehicle = new Vehicle();
 
         newVehicle.setVehicleNumber(
-            vehicle.getVehicleNumber());
+                vehicle.getVehicleNumber());
 
         newVehicle.setVehicleType(
-            vehicle.getVehicleType());
+                vehicle.getVehicleType());
 
         newVehicle.setCapacityKg(
-            vehicle.getCapacityKg());
+                vehicle.getCapacityKg());
 
         newVehicle.setVehicleStatus(
-            vehicle.getVehicleStatus());
+                vehicle.getVehicleStatus());
 
         return vehicleRepository.save(newVehicle);
     }
 
-    // ==========================================
-    // Get All Vehicles
-    // ==========================================
-
+    // GET - All Vehicles
     @Transactional(readOnly = true)
     public List<Vehicle> getAllVehicles() {
         return vehicleRepository.findAll();
     }
 
-    // ==========================================
-    // Get Vehicle By ID
-    // ==========================================
-
+    // GET - Vehicle By ID
     @Transactional(readOnly = true)
     public Optional<Vehicle> getVehicleById(Long vehicleId) {
         return vehicleRepository.findById(vehicleId);
     }
 
-    // ==========================================
-    // Update Vehicle
-    // ==========================================
-
+    // PUT - Update Vehicle
     @Transactional
     public Optional<Vehicle> updateVehicle(
             Long vehicleId,
             Vehicle updatedVehicle) {
 
         Optional<Vehicle> existingOptional =
-            vehicleRepository.findById(vehicleId);
+                vehicleRepository.findById(vehicleId);
 
         if (!existingOptional.isPresent()) {
             return Optional.empty();
@@ -193,26 +164,24 @@ public class Vehicle_Service {
         validateVehicle(updatedVehicle);
 
         checkDuplicateVehicleNumber(
-            updatedVehicle.getVehicleNumber(),
-            vehicleId
-        );
+                updatedVehicle.getVehicleNumber(),
+                vehicleId);
 
         Vehicle existingVehicle = existingOptional.get();
 
         existingVehicle.setVehicleNumber(
-            updatedVehicle.getVehicleNumber());
+                updatedVehicle.getVehicleNumber());
 
         existingVehicle.setVehicleType(
-            updatedVehicle.getVehicleType());
+                updatedVehicle.getVehicleType());
 
         existingVehicle.setCapacityKg(
-            updatedVehicle.getCapacityKg());
+                updatedVehicle.getCapacityKg());
 
         existingVehicle.setVehicleStatus(
-            updatedVehicle.getVehicleStatus());
+                updatedVehicle.getVehicleStatus());
 
         return Optional.of(
-            vehicleRepository.save(existingVehicle)
-        );
+                vehicleRepository.save(existingVehicle));
     }
 }
