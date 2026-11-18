@@ -25,6 +25,7 @@
 <script defer src="admin-profile.js"></script>
 <script defer src="admin-schedules.js"></script>
 <script defer src="admin-bulk-pickups.js"></script>
+<script defer src="admin-contact-messages.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="admin-dashboard.css">
@@ -92,6 +93,11 @@
             <a href="#bulk-pickups" class="nav-link" data-section="bulk-pickups">
                 <i class="fa-solid fa-box"></i>
                 <span>Bulk Pickup Requests</span>
+            </a>
+
+            <a href="#contact-messages" class="nav-link" data-section="contact-messages">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Contact Messages</span>
             </a>
 
             <a href="#profile" class="nav-link" data-section="profile">
@@ -883,6 +889,47 @@
     </div>
 </section>
             <!-- 11. My Profile -->
+            <!-- Contact Messages - Admin Only -->
+            <section id="contact-messages" class="dashboard-section">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                    <div class="section-heading mb-0">
+                        <h2>Contact Messages</h2>
+                        <p>Review and manage inquiries received through the public Contact Us page.</p>
+                    </div>
+                    <button type="button" id="refreshContactMessagesBtn" class="btn btn-outline-success">
+                        <i class="fa-solid fa-rotate me-1"></i> Refresh
+                    </button>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-lg-3"><div class="stat-card"><p>Total Messages</p><h3 id="contactTotalCount">0</h3></div></div>
+                    <div class="col-6 col-lg-3"><div class="stat-card"><p>New</p><h3 id="contactNewCount">0</h3></div></div>
+                    <div class="col-6 col-lg-3"><div class="stat-card"><p>Read</p><h3 id="contactReadCount">0</h3></div></div>
+                    <div class="col-6 col-lg-3"><div class="stat-card"><p>Resolved</p><h3 id="contactResolvedCount">0</h3></div></div>
+                </div>
+                <div class="dashboard-panel">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label" for="contactMessageSearch">Search Messages</label>
+                            <input type="search" class="form-control" id="contactMessageSearch" placeholder="Search name, email, subject or message">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="contactMessageStatusFilter">Status</label>
+                            <select class="form-select" id="contactMessageStatusFilter">
+                                <option value="ALL">All statuses</option><option value="NEW">New</option><option value="READ">Read</option><option value="RESOLVED">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="contactMessagesAlert" class="alert d-none" role="alert" aria-live="polite"></div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead><tr><th>ID</th><th>Sender</th><th>Email</th><th>Subject</th><th>Received</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="contactMessagesTableBody"><tr><td colspan="7" class="text-center text-muted py-4">Open this section to load messages.</td></tr></tbody>
+                        </table>
+                    </div>
+                    <p id="contactMessagesResultCount" class="small text-muted mb-0" aria-live="polite"></p>
+                </div>
+            </section>
+
             <section id="profile" class="dashboard-section">
 
                 <div class="section-heading">
@@ -1800,6 +1847,26 @@
     <div class="modal-header"><h5 class="modal-title" id="bulkPickupDetailsTitle">Bulk Pickup Request Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
     <div class="modal-body"><dl class="row g-3 mb-0" id="bulkPickupDetailsContent"></dl></div>
     <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button></div>
+  </div></div>
+</div>
+
+<!-- Contact Message Details Modal -->
+<div class="modal fade" id="contactMessageDetailsModal" tabindex="-1" aria-labelledby="contactMessageDetailsTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title" id="contactMessageDetailsTitle">Contact Message Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+    <div class="modal-body">
+      <dl class="row g-3">
+        <dt class="col-sm-3">Sender</dt><dd class="col-sm-9" id="contactDetailName"></dd>
+        <dt class="col-sm-3">Email</dt><dd class="col-sm-9" id="contactDetailEmail"></dd>
+        <dt class="col-sm-3">Subject</dt><dd class="col-sm-9" id="contactDetailSubject"></dd>
+        <dt class="col-sm-3">Enquiry Type</dt><dd class="col-sm-9" id="contactDetailType"></dd>
+        <dt class="col-sm-3">Received</dt><dd class="col-sm-9" id="contactDetailDate"></dd>
+        <dt class="col-sm-3">Message</dt><dd class="col-sm-9 contact-message-text" id="contactDetailMessage"></dd>
+      </dl>
+      <label for="contactDetailStatus" class="form-label fw-semibold">Message Status</label>
+      <select class="form-select" id="contactDetailStatus"><option value="NEW">New</option><option value="READ">Read</option><option value="RESOLVED">Resolved</option></select>
+    </div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button><button type="button" class="btn btn-success" id="saveContactStatusBtn">Save Status</button></div>
   </div></div>
 </div>
 

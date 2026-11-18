@@ -1,0 +1,641 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Worker Dashboard | E-Safai</title>
+
+    <link rel="stylesheet" href="worker-dashboard.css">
+    <script src="worker-dashboard.js" defer></script>
+</head>
+
+<body>
+
+    <!-- =====================================
+         SIDEBAR
+    ====================================== -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <div class="brand-icon">♻</div>
+
+            <div>
+                <h2>E-Safai</h2>
+                <p>Worker Portal</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav"
+             aria-label="Worker navigation">
+
+            <button type="button"
+                    class="nav-link active"
+                    data-section="dashboard">
+                <span>▦</span>
+                Dashboard Overview
+            </button>
+
+            <button type="button"
+                    class="nav-link"
+                    data-section="complaints">
+                <span>☷</span>
+                My Complaints
+            </button>
+
+            <button type="button"
+                    class="nav-link"
+                    data-section="schedules">
+                <span>▤</span>
+                My Schedule
+            </button>
+
+            <button type="button"
+                    class="nav-link"
+                    data-section="profile">
+                <span>◉</span>
+                My Profile
+            </button>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <button type="button"
+                    class="logout-btn"
+                    id="logoutBtn">
+                <span>↪</span>
+                Logout
+            </button>
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
+    <main class="main-content">
+
+        <!-- TOP HEADER -->
+        <header class="top-header">
+
+            <div class="header-left">
+
+                <button type="button"
+                        class="menu-toggle"
+                        id="menuToggle"
+                        aria-label="Toggle sidebar"
+                        aria-expanded="false">
+                    ☰
+                </button>
+
+                <div>
+                    <h1 id="pageTitle">Dashboard Overview</h1>
+                    <p>
+                        Manage your assigned waste collection tasks
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="header-right">
+
+                <div class="worker-avatar">W</div>
+
+                <div class="worker-header-info">
+                    <strong id="headerWorkerName">
+                        Worker
+                    </strong>
+                    <span>Field Worker</span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- GLOBAL MESSAGE -->
+        <div id="globalMessage"
+             class="global-message"
+             role="status"
+             aria-live="polite"
+             hidden>
+        </div>
+
+
+        <!-- =====================================
+             1. DASHBOARD OVERVIEW
+        ====================================== -->
+        <section id="dashboardSection"
+                 class="content-section active">
+
+            <div class="welcome-banner">
+
+                <div>
+                    <p class="welcome-label">
+                        WORKER DASHBOARD
+                    </p>
+
+                    <h2>
+                        Welcome,
+                        <span id="welcomeWorkerName">
+                            Worker
+                        </span>!
+                    </h2>
+
+                    <p>
+                        Here's an overview of your assigned
+                        complaints and daily responsibilities.
+                    </p>
+                </div>
+
+                <div class="welcome-icon">♻</div>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+            <div class="stats-grid">
+
+                <article class="stat-card">
+
+                    <div class="stat-icon total-icon">☷</div>
+
+                    <div class="stat-details">
+                        <p>Total Complaints</p>
+                        <h3 id="totalComplaints">0</h3>
+                    </div>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-icon assigned-icon">▤</div>
+
+                    <div class="stat-details">
+                        <p>Assigned</p>
+                        <h3 id="assignedComplaints">0</h3>
+                    </div>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-icon progress-icon">◷</div>
+
+                    <div class="stat-details">
+                        <p>In Progress</p>
+                        <h3 id="inProgressComplaints">0</h3>
+                    </div>
+
+                </article>
+
+                <article class="stat-card">
+
+                    <div class="stat-icon resolved-icon">✓</div>
+
+                    <div class="stat-details">
+                        <p>Resolved</p>
+                        <h3 id="resolvedComplaints">0</h3>
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <!-- RECENT COMPLAINTS -->
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Recent Assigned Complaints</h2>
+                        <p>
+                            Your latest assigned waste complaints
+                        </p>
+                    </div>
+
+                    <button type="button"
+                            class="secondary-btn"
+                            id="viewAllComplaintsBtn">
+                        View All
+                    </button>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Complaint ID</th>
+                                <th>Description</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="recentComplaintsBody">
+                            <tr>
+                                <td colspan="4"
+                                    class="empty-state">
+                                    Loading complaints...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             2. MY COMPLAINTS
+        ====================================== -->
+        <section id="complaintsSection"
+                 class="content-section">
+
+            <div class="section-heading">
+                <h2>My Complaints</h2>
+                <p>
+                    View and update complaints assigned to you.
+                </p>
+            </div>
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Assigned Complaints</h2>
+                        <p>Manage your assigned work</p>
+                    </div>
+
+                    <div class="filter-group">
+
+                        <label for="complaintStatusFilter">
+                            Status:
+                        </label>
+
+                        <select id="complaintStatusFilter">
+
+                            <option value="ALL">
+                                All Complaints
+                            </option>
+
+                            <option value="ASSIGNED">
+                                Assigned
+                            </option>
+
+                            <option value="IN_PROGRESS">
+                                In Progress
+                            </option>
+
+                            <option value="RESOLVED">
+                                Resolved
+                            </option>
+
+                            <option value="REJECTED">
+                                Rejected
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Location</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="complaintsTableBody">
+                            <tr>
+                                <td colspan="7"
+                                    class="empty-state">
+                                    Loading assigned complaints...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             3. MY SCHEDULE
+        ====================================== -->
+        <section id="schedulesSection"
+                 class="content-section">
+
+            <div class="section-heading">
+                <h2>My Schedule</h2>
+                <p>
+                    View your assigned waste collection schedules.
+                </p>
+            </div>
+
+            <div class="content-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Collection Schedules</h2>
+                        <p>Your assigned collection duties</p>
+                    </div>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Schedule</th>
+                                <th>Area</th>
+                                <th>Vehicle</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="schedulesTableBody">
+                            <tr>
+                                <td colspan="7"
+                                    class="empty-state">
+                                    Loading collection schedules...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             4. MY PROFILE
+        ====================================== -->
+        <section id="profileSection"
+                 class="content-section">
+
+            <div class="section-heading">
+                <h2>My Profile</h2>
+                <p>
+                    View and manage your personal information.
+                </p>
+            </div>
+
+            <div class="profile-card">
+
+                <!-- PROFILE HEADER -->
+                <div class="profile-banner">
+
+                    <div class="profile-avatar"
+                         id="profileAvatar">
+                        W
+                    </div>
+
+                    <div>
+                        <h2 id="profileWorkerName">
+                            Worker Name
+                        </h2>
+
+                        <p>Waste Collection Worker</p>
+                    </div>
+
+                </div>
+
+
+                <!-- =================================
+                     PROFILE VIEW
+                ================================== -->
+                <div class="profile-content"
+                     id="profileView">
+
+                    <div class="profile-section-header">
+
+                        <h3>Personal Information</h3>
+
+                        <button type="button"
+                                class="secondary-btn"
+                                id="editProfileBtn">
+                            ✎ Edit Profile
+                        </button>
+
+                    </div>
+
+                    <div class="profile-grid">
+
+                        <div class="profile-field">
+                            <label>Full Name</label>
+                            <p id="profileFullName">—</p>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Email Address</label>
+                            <p id="profileEmail">—</p>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Phone Number</label>
+                            <p id="profilePhone">—</p>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Address</label>
+                            <p id="profileAddress">—</p>
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <h3>Employment Information</h3>
+
+                    <div class="profile-grid">
+
+                        <div class="profile-field">
+                            <label>Worker ID</label>
+                            <p id="profileWorkerId">—</p>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Employee Code</label>
+                            <p id="profileEmployeeCode">—</p>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Joining Date</label>
+                            <p id="profileJoiningDate">—</p>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Role</label>
+                            <p>WORKER</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================
+                     EDIT PROFILE FORM
+                ================================== -->
+                <div class="profile-content"
+                     id="profileEditView"
+                     hidden>
+
+                    <h3>Edit Personal Information</h3>
+
+                    <p class="edit-profile-description">
+                        Update your name, phone number and address.
+                        Your employment details cannot be changed here.
+                    </p>
+
+                    <form id="editProfileForm">
+
+                        <div class="profile-grid">
+
+                            <!-- FULL NAME -->
+                            <div class="profile-field">
+
+                                <label for="editFullName">
+                                    Full Name
+                                </label>
+
+                                <input type="text"
+                                       id="editFullName"
+                                       name="fullName"
+                                       maxlength="100"
+                                       autocomplete="name"
+                                       required>
+
+                            </div>
+
+
+                            <!-- PHONE NUMBER -->
+                            <div class="profile-field">
+
+                                <label for="editPhoneNumber">
+                                    Phone Number
+                                </label>
+
+                                <input type="tel"
+                                       id="editPhoneNumber"
+                                       name="phoneNumber"
+                                       maxlength="10"
+                                       pattern="[0-9]{10}"
+                                       inputmode="numeric"
+                                       autocomplete="tel"
+                                       required>
+
+                            </div>
+
+
+                            <!-- ADDRESS -->
+                            <div class="profile-field edit-address-field">
+
+                                <label for="editAddress">
+                                    Address
+                                </label>
+
+                                <textarea id="editAddress"
+                                          name="address"
+                                          rows="3"
+                                          maxlength="255"
+                                          autocomplete="street-address"
+                                          required></textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- READ-ONLY EMAIL -->
+                        <div class="profile-field">
+
+                            <label for="editEmail">
+                                Email Address
+                            </label>
+
+                            <input type="email"
+                                   id="editEmail"
+                                   readonly>
+
+                            <p class="readonly-note">
+                                Email cannot be changed by workers.
+                            </p>
+
+                        </div>
+
+
+                        <!-- FORM MESSAGE -->
+                        <p id="editProfileMessage"
+                           role="status"
+                           aria-live="polite"
+                           hidden>
+                        </p>
+
+
+                        <!-- ACTION BUTTONS -->
+                        <div class="edit-profile-actions">
+
+                            <button type="submit"
+                                    class="action-btn"
+                                    id="saveProfileBtn">
+                                Save Changes
+                            </button>
+
+                            <button type="button"
+                                    class="secondary-btn"
+                                    id="cancelEditProfileBtn">
+                                Cancel
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

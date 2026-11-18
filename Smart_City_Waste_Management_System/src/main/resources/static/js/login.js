@@ -96,7 +96,7 @@ setTimeout(function () {
     } 
     else if (role === "WORKER") {
 
-        window.location.href = "worker-dashboard.html";
+        window.location.href = "/worker/worker-dashboard.html";
 
     } 
     else if (role === "ADMIN") {
