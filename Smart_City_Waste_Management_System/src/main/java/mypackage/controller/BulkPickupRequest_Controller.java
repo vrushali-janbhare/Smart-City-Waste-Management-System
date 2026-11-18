@@ -3,6 +3,7 @@ package mypackage.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,7 +25,7 @@ public class BulkPickupRequest_Controller {
     @Autowired
     private BulkPickupRequest_Service bulkPickupRequestService;
 
-    // Data accepted from the citizen's form
+    // Citizen form DTO
     public static class BulkPickupRequestDTO {
 
         private Long areaId;
@@ -75,9 +76,24 @@ public class BulkPickupRequest_Controller {
         }
     }
 
+    // Admin status update DTO
+    public static class StatusUpdateDTO {
+
+        private String requestStatus;
+
+        public String getRequestStatus() {
+            return requestStatus;
+        }
+
+        public void setRequestStatus(String requestStatus) {
+            this.requestStatus = requestStatus;
+        }
+    }
+
     private Long getCitizenId(HttpSession session) {
 
-        Object userId = session.getAttribute("loggedInUserId");
+        Object userId =
+                session.getAttribute("loggedInUserId");
 
         String role = (String) session.getAttribute(
                 "loggedInUserRole");
@@ -88,6 +104,18 @@ public class BulkPickupRequest_Controller {
         }
 
         return (Long) userId;
+    }
+
+    private boolean isAdmin(HttpSession session) {
+
+        Object userId =
+                session.getAttribute("loggedInUserId");
+
+        String role = (String) session.getAttribute(
+                "loggedInUserRole");
+
+        return userId instanceof Long &&
+                "ADMIN".equals(role);
     }
 
     private Map<String, String> message(String text) {
@@ -102,9 +130,12 @@ public class BulkPickupRequest_Controller {
         result.put("requestId", request.getRequestId());
         result.put("requestedDate", request.getRequestedDate());
         result.put("pickupAddress", request.getPickupAddress());
+
         result.put("estimatedQuantityKg",
                 request.getEstimatedQuantityKg());
-        result.put("requestStatus", request.getRequestStatus());
+
+        result.put("requestStatus",
+                request.getRequestStatus());
 
         result.put("areaId",
                 request.getArea().getAreaId());
@@ -115,7 +146,11 @@ public class BulkPickupRequest_Controller {
         return result;
     }
 
-    // 1. Submit a new bulk pickup request
+    // =====================================
+    // CITIZEN ENDPOINTS
+    // =====================================
+
+    // 1. Submit a new request
     @PostMapping
     public ResponseEntity<?> createRequest(
             @RequestBody BulkPickupRequestDTO data,
@@ -148,7 +183,7 @@ public class BulkPickupRequest_Controller {
         }
     }
 
-    // 2. View only the logged-in citizen's requests
+    // 2. View logged-in citizen's requests
     @GetMapping("/my-requests")
     public ResponseEntity<?> getMyRequests(
             HttpSession session) {
@@ -164,7 +199,7 @@ public class BulkPickupRequest_Controller {
                 bulkPickupRequestService.getMyRequests(userId);
 
         List<Map<String, Object>> result =
-                new java.util.ArrayList<>();
+                new ArrayList<>();
 
         for (BulkPickupRequest request : requests) {
             result.add(toResponse(request));
@@ -173,8 +208,8 @@ public class BulkPickupRequest_Controller {
         return ResponseEntity.ok(result);
     }
 
-    // 3. View one request, only if it belongs to the citizen
-    @GetMapping("/{requestId}")
+    // 3. View own request by ID
+    @GetMapping("/{requestId:\\d+}")
     public ResponseEntity<?> getMyRequestById(
             @PathVariable Long requestId,
             HttpSession session) {
@@ -191,5 +226,71 @@ public class BulkPickupRequest_Controller {
                 .<ResponseEntity<?>>map(request ->
                         ResponseEntity.ok(toResponse(request)))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // =====================================
+    // ADMIN ENDPOINTS
+    // =====================================
+
+    // 4. Admin: View all requests
+    @GetMapping("/admin/all")
+    public ResponseEntity<?> getAllRequestsForAdmin(
+            HttpSession session) {
+
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(403).body(
+                    message("Admin access is required"));
+        }
+
+        return ResponseEntity.ok(
+                bulkPickupRequestService
+                        .getAllRequestsForAdmin());
+    }
+
+    // 5. Admin: View request details
+    @GetMapping("/admin/{requestId:\\d+}")
+    public ResponseEntity<?> getRequestForAdmin(
+            @PathVariable Long requestId,
+            HttpSession session) {
+
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(403).body(
+                    message("Admin access is required"));
+        }
+
+        return bulkPickupRequestService
+                .getRequestForAdmin(requestId)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 6. Admin: Update request status
+    @PatchMapping("/admin/{requestId:\\d+}/status")
+    public ResponseEntity<?> updateRequestStatus(
+            @PathVariable Long requestId,
+            @RequestBody StatusUpdateDTO data,
+            HttpSession session) {
+
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(403).body(
+                    message("Admin access is required"));
+        }
+
+        try {
+
+            return ResponseEntity.ok(
+                    bulkPickupRequestService.updateRequestStatus(
+                            requestId,
+                            data.getRequestStatus()));
+
+        } catch (IllegalArgumentException e) {
+
+            if ("Request not found".equals(e.getMessage())) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.badRequest().body(
+                    message(e.getMessage()));
+        }
     }
 }

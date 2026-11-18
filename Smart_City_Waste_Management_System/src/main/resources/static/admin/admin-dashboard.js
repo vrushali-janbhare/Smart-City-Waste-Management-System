@@ -1167,9 +1167,41 @@ document.addEventListener("DOMContentLoaded", function () {
         showSection("dashboard");
     }
 
+   
     loadDashboardStatistics();
     loadComplaintChart();
     loadRecentComplaints();
     loadCitizens();
+
+    // ==========================================
+    // ADMIN LOGOUT
+    // ==========================================
+
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", async function () {
+
+            logoutBtn.disabled = true;
+
+            try {
+                const response = await fetch("/api/users/logout", {
+                    method: "POST",
+                    credentials: "same-origin"
+                });
+
+                if (!response.ok) {
+                    throw new Error("Logout failed");
+                }
+
+                window.location.replace("/login.html");
+
+            } catch (error) {
+                console.error("Logout error:", error);
+                alert("Unable to logout. Please try again.");
+                logoutBtn.disabled = false;
+            }
+        });
+    }
 
 });
