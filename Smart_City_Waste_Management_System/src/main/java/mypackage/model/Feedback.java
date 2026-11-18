@@ -23,9 +23,9 @@ public class Feedback {
     private Long feedbackId;
 
     // One feedback belongs to one complaint
-    // UNIQUE complaint_id means one complaint can have only one feedback
+    // One complaint can have only one feedback
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "complaint_id", unique = true)
+    @JoinColumn(name = "complaint_id", nullable = false, unique = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Complaint complaint;
 
@@ -34,7 +34,6 @@ public class Feedback {
 
     @Column(name = "comments", columnDefinition = "TEXT")
     private String comments;
-
 
     // Getters and Setters
 

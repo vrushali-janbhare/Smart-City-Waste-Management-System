@@ -1,13 +1,17 @@
 
 package mypackage.controller;
 
+import java.util.Collections;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import mypackage.model.Feedback;
+import mypackage.dto.FeedbackRequestDTO;
+import mypackage.dto.FeedbackResponseDTO;
 import mypackage.service.Feedback_Service;
 
 @RestController
@@ -17,53 +21,101 @@ public class Feedback_Controller {
     @Autowired
     private Feedback_Service feedbackService;
 
-    // Insert new feedback
+
+    // Submit feedback for logged-in citizen
     @PostMapping
-    public Feedback saveFeedback(@RequestBody Feedback feedback) {
-        return feedbackService.saveFeedback(feedback);
+    public ResponseEntity<?> submitFeedback(
+            @RequestBody FeedbackRequestDTO request,
+            HttpSession session) {
+
+        Long userId = (Long) session.getAttribute(
+                "loggedInUserId"
+        );
+
+        String role = (String) session.getAttribute(
+                "loggedInUserRole"
+        );
+
+        if (userId == null) {
+            return ResponseEntity.status(401).body(
+                    Collections.singletonMap(
+                            "message",
+                            "Please log in first"
+                    )
+            );
+        }
+
+        if (!"USER".equals(role)) {
+            return ResponseEntity.status(403).body(
+                    Collections.singletonMap(
+                            "message",
+                            "Only citizens can submit feedback"
+                    )
+            );
+        }
+
+        try {
+
+            FeedbackResponseDTO result =
+                    feedbackService.submitFeedback(userId, request);
+
+            return ResponseEntity.ok(result);
+
+        } catch (SecurityException e) {
+
+            return ResponseEntity.status(403).body(
+                    Collections.singletonMap(
+                            "message",
+                            e.getMessage()
+                    )
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.badRequest().body(
+                    Collections.singletonMap(
+                            "message",
+                            e.getMessage()
+                    )
+            );
+        }
     }
 
-    // Get all feedback
-    @GetMapping
-    public List<Feedback> getAllFeedback() {
-        return feedbackService.getAllFeedback();
-    }
 
-    // Get feedback by ID
-    @GetMapping("/{feedbackId}")
-    public ResponseEntity<Feedback> getFeedbackById(
-            @PathVariable Long feedbackId) {
+    // Get logged-in citizen's feedback history
+    @GetMapping("/my-feedback")
+    public ResponseEntity<?> getMyFeedback(
+            HttpSession session) {
 
-        return feedbackService.getFeedbackById(feedbackId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+        Long userId = (Long) session.getAttribute(
+                "loggedInUserId"
+        );
 
-    // Update feedback by ID
-    @PutMapping("/{feedbackId}")
-    public ResponseEntity<Feedback> updateFeedback(
-            @PathVariable Long feedbackId,
-            @RequestBody Feedback feedback) {
+        String role = (String) session.getAttribute(
+                "loggedInUserRole"
+        );
 
-        return feedbackService.getFeedbackById(feedbackId)
-                .map(existingFeedback -> {
-                    feedback.setFeedbackId(feedbackId);
-                    return ResponseEntity.ok(
-                            feedbackService.saveFeedback(feedback));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
+        if (userId == null) {
+            return ResponseEntity.status(401).body(
+                    Collections.singletonMap(
+                            "message",
+                            "Please log in first"
+                    )
+            );
+        }
 
-    // Delete feedback by ID
-    @DeleteMapping("/{feedbackId}")
-    public ResponseEntity<Void> deleteFeedback(
-            @PathVariable Long feedbackId) {
+        if (!"USER".equals(role)) {
+            return ResponseEntity.status(403).body(
+                    Collections.singletonMap(
+                            "message",
+                            "Only citizens can view their feedback"
+                    )
+            );
+        }
 
-        return feedbackService.getFeedbackById(feedbackId)
-                .map(existingFeedback -> {
-                    feedbackService.deleteFeedback(feedbackId);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        List<FeedbackResponseDTO> feedbackList =
+                feedbackService.getMyFeedback(userId);
+
+        return ResponseEntity.ok(feedbackList);
     }
 }

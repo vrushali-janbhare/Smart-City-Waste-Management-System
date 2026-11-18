@@ -1,0 +1,444 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>E-Safai | Citizen Dashboard</title>
+
+    <link rel="stylesheet" href="css/user-dashboard.css">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">♻</div>
+            <div>
+                <h2>E-Safai</h2>
+                <span>Smart City Initiative</span>
+            </div>
+        </div>
+
+        <div class="sidebar-heading">MAIN MENU</div>
+
+        <nav class="sidebar-menu">
+
+            <a href="user-dashboard.html" class="nav-link active">
+                <span class="nav-icon">▦</span>
+                Dashboard
+            </a>
+
+            <a href="report-waste.html" class="nav-link">
+                <span class="nav-icon">＋</span>
+                Report Waste
+            </a>
+
+            <a href="my-complaints.html" class="nav-link">
+                <span class="nav-icon">▤</span>
+                My Complaints
+            </a>
+
+            <a href="track-complaint.html" class="nav-link">
+                <span class="nav-icon">⌖</span>
+                Track Complaint
+            </a>
+
+
+            <a href="bulk-pickup.html" class="nav-link">
+                <span class="nav-icon">🚛</span>
+                Bulk Pickup
+            </a>
+
+            
+
+            <a href="feedback.html" class="nav-link">
+                <span class="nav-icon">☆</span>
+                Feedback
+            </a>
+
+        </nav>
+
+        <div class="sidebar-heading account-heading">ACCOUNT</div>
+
+        <nav class="sidebar-menu">
+
+            <a href="my-profile.html" class="nav-link">
+                <span class="nav-icon">♙</span>
+                My Profile
+            </a>
+
+        <a href="#" id="logoutBtn" class="nav-link logout-link">
+    <span class="nav-icon">↪</span>
+    Logout
+</a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-bottom-icon">🌱</div>
+            <h4>Keep Your City Clean!</h4>
+            <p>Small actions make a big difference.</p>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP NAVBAR -->
+        <header class="top-navbar">
+
+            <div class="page-heading">
+                <h2>Dashboard</h2>
+                <p>Welcome to your citizen dashboard</p>
+            </div>
+
+            <div class="top-actions">
+
+                <button class="notification-button" type="button"
+                        aria-label="Notifications">
+                    ♧
+                    <span class="notification-dot"></span>
+                </button>
+
+                <div class="profile-info">
+                    <div class="profile-avatar">V</div>
+                    <div class="profile-details">
+                        <h4>Citizen Name</h4>
+                        <span>Citizen</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+        <div class="content-area">
+
+            <!-- WELCOME SECTION -->
+            <section class="welcome-section">
+
+                <div class="welcome-text">
+                    <span class="welcome-label">CITIZEN DASHBOARD</span>
+
+                    <h1>Welcome back, Citizen! 👋</h1>
+
+                    <p>
+                        Together, let's make our city cleaner, greener
+                        and healthier. Your contribution matters!
+                    </p>
+
+                    <a href="report-waste.html" class="primary-button">
+                        + Report New Waste
+                    </a>
+                </div>
+
+                <div class="welcome-illustration">
+                    <div class="welcome-circle">
+                        <span>♻</span>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- STATISTICS SECTION -->
+            <section class="statistics-section">
+
+                <div class="section-heading">
+                    <div>
+                        <h2>Complaint Overview</h2>
+                        <p>Summary of your reported complaints</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-icon total-icon">▤</div>
+                        <div class="stat-details">
+                            <p>Total Complaints</p>
+                            <h2>12</h2>
+                            <span>All submitted complaints</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon pending-icon">◷</div>
+                        <div class="stat-details">
+                            <p>Pending Complaints</p>
+                            <h2>04</h2>
+                            <span>Waiting for action</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon progress-icon">↻</div>
+                        <div class="stat-details">
+                            <p>In Progress</p>
+                            <h2>03</h2>
+                            <span>Currently being handled</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon resolved-icon">✓</div>
+                        <div class="stat-details">
+                            <p>Resolved Complaints</p>
+                            <h2>05</h2>
+                            <span>Successfully completed</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- QUICK ACTIONS -->
+            <section class="quick-actions-section">
+
+                <div class="section-heading">
+                    <div>
+                        <h2>Quick Actions</h2>
+                        <p>Access your frequently used services</p>
+                    </div>
+                </div>
+
+                <div class="quick-actions-grid">
+
+                    <a href="report-waste.html" class="action-card">
+                        <div class="action-icon report-icon">＋</div>
+                        <div>
+                            <h3>Report Waste</h3>
+                            <p>Submit a new waste complaint</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+
+                    <a href="my-complaints.html" class="action-card">
+                        <div class="action-icon complaints-icon">▤</div>
+                        <div>
+                            <h3>My Complaints</h3>
+                            <p>View your submitted complaints</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+
+                    <a href="track-complaint.html" class="action-card">
+                        <div class="action-icon track-icon">⌖</div>
+                        <div>
+                            <h3>Track Complaint</h3>
+                            <p>Check your complaint status</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+
+                    <a href="bulk-pickup.html" class="action-card">
+                        <div class="action-icon pickup-icon">🚛</div>
+                        <div>
+                            <h3>Bulk Pickup</h3>
+                            <p>Request bulk waste collection</p>
+                        </div>
+                        <span class="action-arrow">→</span>
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- RECENT COMPLAINTS -->
+            <section class="recent-complaints-section">
+
+                <div class="section-heading">
+                    <div>
+                        <h2>Recent Complaints</h2>
+                        <p>Latest updates on your waste complaints</p>
+                    </div>
+
+                    <a href="my-complaints.html" class="view-all">
+                        View All →
+                    </a>
+                </div>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Complaint ID</th>
+                                <th>Waste Category</th>
+                                <th>Location</th>
+                                <th>Reported Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td class="complaint-id">#CMP001</td>
+                                <td>Plastic Waste</td>
+                                <td>Baramati</td>
+                                <td>15 Nov 2026</td>
+                                <td>
+                                    <span class="status pending">Pending</span>
+                                </td>
+                                <td>
+                                    <a href="track-complaint.html"
+                                       class="table-action">View</a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="complaint-id">#CMP002</td>
+                                <td>Organic Waste</td>
+                                <td>Shivaji Nagar</td>
+                                <td>13 Nov 2026</td>
+                                <td>
+                                    <span class="status progress">In Progress</span>
+                                </td>
+                                <td>
+                                    <a href="track-complaint.html"
+                                       class="table-action">View</a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="complaint-id">#CMP003</td>
+                                <td>Mixed Waste</td>
+                                <td>Bhigwan Road</td>
+                                <td>10 Nov 2026</td>
+                                <td>
+                                    <span class="status resolved">Resolved</span>
+                                </td>
+                                <td>
+                                    <a href="track-complaint.html"
+                                       class="table-action">View</a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- BOTTOM INFORMATION -->
+            <section class="bottom-grid">
+
+                <!-- ACTIVITY -->
+                <div class="information-card">
+
+                    <div class="section-heading">
+                        <div>
+                            <h2>Recent Activity</h2>
+                            <p>Your latest complaint updates</p>
+                        </div>
+                    </div>
+
+                    <div class="activity-list">
+
+                        <div class="activity-item">
+                            <div class="activity-indicator green"></div>
+                            <div>
+                                <h4>Complaint Resolved</h4>
+                                <p>Your complaint #CMP003 has been resolved.</p>
+                                <span>Recently updated</span>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-indicator orange"></div>
+                            <div>
+                                <h4>Complaint In Progress</h4>
+                                <p>Your complaint #CMP002 is being handled.</p>
+                                <span>Recently updated</span>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-indicator blue"></div>
+                            <div>
+                                <h4>Complaint Submitted</h4>
+                                <p>Your complaint #CMP001 was submitted.</p>
+                                <span>Recently updated</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AWARENESS -->
+                <div class="awareness-card">
+
+                    <div class="awareness-icon">🌍</div>
+
+                    <span class="awareness-label">E-SAFai AWARENESS</span>
+
+                    <h2>A Cleaner City Starts With You!</h2>
+
+                    <p>
+                        Segregate waste at source. Keep wet and dry
+                        waste separate to support proper recycling
+                        and waste management.
+                    </p>
+
+                    <div class="awareness-tip">
+                        <span>✓</span>
+                        Separate wet and dry waste.
+                    </div>
+
+                    <div class="awareness-tip">
+                        <span>✓</span>
+                        Avoid single-use plastics.
+                    </div>
+
+                    <div class="awareness-tip">
+                        <span>✓</span>
+                        Keep public places clean.
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- FOOTER -->
+        <footer class="dashboard-footer">
+
+            <p>© 2026 E-Safai Smart City Waste Management System.</p>
+
+            <div>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Contact Us</a>
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+<script src="js/user-dashboard.js"></script>
+</body>
+</html>

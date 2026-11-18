@@ -5,15 +5,15 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.Table;
+import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,37 +28,41 @@ public class Worker {
     @Column(name = "worker_id")
     private Long workerId;
 
-    // One worker belongs to one user
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(
+        name = "user_id",
+        nullable = false,
+        unique = true
+    )
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
-    @Column(name = "employee_code", nullable = false, unique = true, length = 30)
+    @Column(
+        name = "employee_code",
+        nullable = false,
+        unique = true,
+        length = 30
+    )
     private String employeeCode;
 
     @Column(name = "joining_date", nullable = false)
     private LocalDate joiningDate;
 
-    // One worker can be assigned to many crew records
     @OneToMany(mappedBy = "worker")
     @JsonIgnore
     private Set<CollectionCrewMember> crewMembers;
 
-    // One worker can have many collection records
     @OneToMany(mappedBy = "worker")
     @JsonIgnore
     private Set<CollectionRecord> collectionRecords;
 
-
-    // Automatically set joining date before first insert
+    // Automatically set joining date
     @PrePersist
     public void setJoiningDateAutomatically() {
         if (this.joiningDate == null) {
             this.joiningDate = LocalDate.now();
         }
     }
-
 
     // Getters and Setters
 
@@ -98,7 +102,8 @@ public class Worker {
         return crewMembers;
     }
 
-    public void setCrewMembers(Set<CollectionCrewMember> crewMembers) {
+    public void setCrewMembers(
+            Set<CollectionCrewMember> crewMembers) {
         this.crewMembers = crewMembers;
     }
 
@@ -106,7 +111,8 @@ public class Worker {
         return collectionRecords;
     }
 
-    public void setCollectionRecords(Set<CollectionRecord> collectionRecords) {
+    public void setCollectionRecords(
+            Set<CollectionRecord> collectionRecords) {
         this.collectionRecords = collectionRecords;
     }
 }

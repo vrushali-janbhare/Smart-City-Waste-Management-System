@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>My Profile | E-Safai</title>
+    <link rel="stylesheet" href="css/my-profile.css">
+</head>
+<body>
+
+    <!-- TOP NAVIGATION -->
+    <header class="topbar">
+        <a href="user-dashboard.html" class="brand">
+            <span class="brand-icon">♻</span>
+            E-Safai
+        </a>
+
+        <nav class="top-navigation">
+            <a href="user-dashboard.html">Dashboard</a>
+            <a href="report-waste.html">Report Waste</a>
+            <a href="my-complaints.html">My Complaints</a>
+            <a href="bulk-pickup.html">Bulk Pickup</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </nav>
+    </header>
+
+    <main class="page-container">
+
+        <!-- PAGE HEADING -->
+        <section class="page-heading">
+            <p class="eyebrow">E-SAFAI ACCOUNT</p>
+            <h1>My Profile</h1>
+            <p class="subtitle">
+                Manage your personal information and account details.
+            </p>
+        </section>
+
+        <!-- PROFILE CARD -->
+        <section class="profile-card">
+
+            <div class="profile-header">
+                <div class="avatar" id="profileAvatar">U</div>
+
+                <div class="profile-heading">
+                    <h2 id="profileName">Loading...</h2>
+                    <p id="profileEmail">Please wait</p>
+                    <span class="role-badge" id="profileRole">
+                        Citizen
+                    </span>
+                </div>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h3>Personal Information</h3>
+                    <p>
+                        Your registered E-Safai account details.
+                    </p>
+                </div>
+
+                <button type="button"
+                        id="editProfileBtn"
+                        class="btn-primary"
+                        disabled>
+                    Edit Profile
+                </button>
+            </div>
+
+            <!-- READ-ONLY PROFILE -->
+            <div id="profileDetails" class="info-grid">
+
+                <div class="info-group">
+                    <label>User ID</label>
+                    <p id="userId">-</p>
+                </div>
+
+                <div class="info-group">
+                    <label>Full Name</label>
+                    <p id="fullName">-</p>
+                </div>
+
+                <div class="info-group">
+                    <label>Email Address</label>
+                    <p id="email">-</p>
+                </div>
+
+                <div class="info-group">
+                    <label>Phone Number</label>
+                    <p id="phoneNumber">-</p>
+                </div>
+
+                <div class="info-group full-width">
+                    <label>Residential Address</label>
+                    <p id="address">-</p>
+                </div>
+
+            </div>
+
+            <!-- EDIT PROFILE FORM -->
+            <form id="editProfileForm" hidden>
+
+                <div class="edit-grid">
+
+                    <div class="form-group">
+                        <label for="editFullName">
+                            Full Name <span>*</span>
+                        </label>
+                        <input type="text"
+                               id="editFullName"
+                               maxlength="100"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editEmail">
+                            Email Address <span>*</span>
+                        </label>
+                        <input type="email"
+                               id="editEmail"
+                               maxlength="255"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editPhoneNumber">
+                            Phone Number <span>*</span>
+                        </label>
+                        <input type="tel"
+                               id="editPhoneNumber"
+                               maxlength="20"
+                               required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="editAddress">
+                            Residential Address <span>*</span>
+                        </label>
+                        <textarea id="editAddress"
+                                  rows="4"
+                                  maxlength="255"
+                                  required></textarea>
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="button"
+                            id="cancelEditBtn"
+                            class="btn-secondary">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            id="saveProfileBtn"
+                            class="btn-primary">
+                        Save Changes
+                    </button>
+                </div>
+
+            </form>
+
+            <!-- SUCCESS / ERROR MESSAGE -->
+            <div id="profileMessage"
+                 class="message-box"
+                 role="status"
+                 aria-live="polite"></div>
+
+            <div class="profile-footer">
+                <p>
+                    Keep your contact details updated for
+                    E-Safai services and notifications.
+                </p>
+
+                <button type="button"
+                        id="refreshProfileBtn"
+                        class="btn-secondary">
+                    Refresh Profile
+                </button>
+            </div>
+
+        </section>
+
+        <!-- HELP CARD -->
+        <section class="help-card">
+            <span class="help-icon">ⓘ</span>
+            <div>
+                <h3>Account Security</h3>
+                <p>
+                    You can update your name, email, phone number
+                    and address. Your password and account role
+                    cannot be changed from this page.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        &copy; 2026 E-Safai Smart City Waste Management System
+    </footer>
+
+    <script src="js/my-profile.js"></script>
+</body>
+</html>

@@ -1,9 +1,15 @@
 
 package mypackage.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,53 +23,144 @@ public class Vehicle_Controller {
     @Autowired
     private Vehicle_Service vehicleService;
 
-    // Insert new vehicle
+    // ==========================================
+    // Check Admin Session
+    // ==========================================
+
+    private boolean isAdmin(HttpSession session) {
+
+        Object userId =
+            session.getAttribute("loggedInUserId");
+
+        Object role =
+            session.getAttribute("loggedInUserRole");
+
+        return userId != null &&
+               role != null &&
+               "ADMIN".equalsIgnoreCase(role.toString());
+    }
+
+    // ==========================================
+    // Error Response
+    // ==========================================
+
+    private Map<String, String> errorMessage(String message) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("message", message);
+
+        return error;
+    }
+
+    // ==========================================
+    // POST - Add Vehicle
+    // ==========================================
+
     @PostMapping
-    public Vehicle saveVehicle(@RequestBody Vehicle vehicle) {
-        return vehicleService.saveVehicle(vehicle);
+    public ResponseEntity<?> saveVehicle(
+            @RequestBody Vehicle vehicle,
+            HttpSession session) {
+
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(errorMessage("Admin access required."));
+        }
+
+        try {
+
+            Vehicle savedVehicle =
+                vehicleService.saveVehicle(vehicle);
+
+            return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(savedVehicle);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                .badRequest()
+                .body(errorMessage(e.getMessage()));
+        }
     }
 
-    // Get all vehicles
+    // ==========================================
+    // GET - All Vehicles
+    // ==========================================
+
     @GetMapping
-    public List<Vehicle> getAllVehicles() {
-        return vehicleService.getAllVehicles();
+    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+
+        return ResponseEntity.ok(
+            vehicleService.getAllVehicles()
+        );
     }
 
-    // Get vehicle by ID
+    // ==========================================
+    // GET - Vehicle By ID
+    // ==========================================
+
     @GetMapping("/{vehicleId}")
     public ResponseEntity<Vehicle> getVehicleById(
             @PathVariable Long vehicleId) {
 
         return vehicleService.getVehicleById(vehicleId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
-    // Update vehicle by ID
+    // ==========================================
+    // PUT - Update Vehicle
+    // ==========================================
+
     @PutMapping("/{vehicleId}")
-    public ResponseEntity<Vehicle> updateVehicle(
+    public ResponseEntity<?> updateVehicle(
             @PathVariable Long vehicleId,
-            @RequestBody Vehicle vehicle) {
+            @RequestBody Vehicle vehicle,
+            HttpSession session) {
 
-        return vehicleService.getVehicleById(vehicleId)
-                .map(existingVehicle -> {
-                    vehicle.setVehicleId(vehicleId);
-                    return ResponseEntity.ok(
-                            vehicleService.saveVehicle(vehicle));
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(errorMessage("Admin access required."));
+        }
+
+        try {
+
+            Optional<Vehicle> updatedVehicle =
+                vehicleService.updateVehicle(vehicleId, vehicle);
+
+            if (!updatedVehicle.isPresent()) {
+                return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(errorMessage("Vehicle not found."));
+            }
+
+            return ResponseEntity.ok(updatedVehicle.get());
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                .badRequest()
+                .body(errorMessage(e.getMessage()));
+        }
     }
 
-    // Delete vehicle by ID
-    @DeleteMapping("/{vehicleId}")
-    public ResponseEntity<Void> deleteVehicle(
-            @PathVariable Long vehicleId) {
+    // ==========================================
+    // DELETE - Disabled
+    // ==========================================
 
-        return vehicleService.getVehicleById(vehicleId)
-                .map(existingVehicle -> {
-                    vehicleService.deleteVehicle(vehicleId);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    @DeleteMapping("/{vehicleId}")
+    public ResponseEntity<?> deleteVehicle(
+            @PathVariable Long vehicleId,
+            HttpSession session) {
+
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(errorMessage("Admin access required."));
+        }
+
+        return ResponseEntity
+            .status(HttpStatus.METHOD_NOT_ALLOWED)
+            .body(errorMessage(
+                "Vehicle deletion is disabled to preserve collection records."));
     }
 }

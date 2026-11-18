@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Bulk Pickup | E-Safai</title>
+
+    <link rel="stylesheet" href="css/bulk-pickup.css">
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION -->
+    <header class="topbar">
+
+        <a href="user-dashboard.html" class="brand">
+            <span class="brand-icon">♻</span>
+            E-Safai
+        </a>
+
+        <nav class="top-navigation">
+            <a href="user-dashboard.html">Dashboard</a>
+            <a href="report-waste.html">Report Waste</a>
+            <a href="my-complaints.html">My Complaints</a>
+            <a href="#pickupHistory">My Pickup Requests</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </nav>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="page-container">
+
+        <!-- PAGE HEADING -->
+        <section class="page-heading">
+
+            <div>
+                <p class="eyebrow">E-SAFAI SERVICES</p>
+
+                <h1>Request Bulk Waste Pickup</h1>
+
+                <p class="subtitle">
+                    Schedule a pickup for large quantities of waste
+                    from your home or location.
+                </p>
+            </div>
+
+            <div class="heading-icon" aria-hidden="true">
+                🚛
+            </div>
+
+        </section>
+
+
+        <!-- BULK PICKUP FORM -->
+        <section class="form-card">
+
+            <div class="form-heading">
+
+                <div>
+                    <h2>Bulk Pickup Request Form</h2>
+
+                    <p>
+                        Fill in the details below to request
+                        a waste pickup.
+                    </p>
+                </div>
+
+                <span class="required-note">
+                    * Required fields
+                </span>
+
+            </div>
+
+
+            <form id="bulkPickupForm">
+
+                <!-- SECTION 1: PICKUP DETAILS -->
+                <section class="form-section">
+
+                    <h3>
+                        <span>01</span>
+                        Pickup Details
+                    </h3>
+
+
+                    <!-- WASTE CATEGORY -->
+                    <div class="form-group">
+
+                        <label for="category">
+                            Waste Category <span>*</span>
+                        </label>
+
+                        <select id="category" required>
+                            <option value="">
+                                Select Waste Category
+                            </option>
+                        </select>
+
+                        <small>
+                            Select the type of waste
+                            that needs collection.
+                        </small>
+
+                    </div>
+
+
+                    <!-- ESTIMATED QUANTITY -->
+                    <div class="form-group">
+
+                        <label for="estimatedQuantityKg">
+                            Estimated Waste Quantity (kg)
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="estimatedQuantityKg"
+                            min="0.01"
+                            max="99999999.99"
+                            step="0.01"
+                            placeholder="Example: 25.50"
+                            required>
+
+                        <small>
+                            Enter the approximate weight
+                            in kilograms.
+                        </small>
+
+                    </div>
+
+
+                    <!-- PREFERRED PICKUP DATE -->
+                    <div class="form-group">
+
+                        <label for="requestedDate">
+                            Preferred Pickup Date
+                            <span>*</span>
+                        </label>
+
+                        <input
+                            type="date"
+                            id="requestedDate"
+                            required>
+
+                        <small>
+                            Choose today or a future date.
+                            The pickup date is subject
+                            to confirmation by the administrator.
+                        </small>
+
+                    </div>
+
+                </section>
+
+
+                <div class="form-divider"></div>
+
+
+                <!-- SECTION 2: PICKUP LOCATION -->
+                <section class="form-section">
+
+                    <h3>
+                        <span>02</span>
+                        Pickup Location
+                    </h3>
+
+
+                    <!-- AREA -->
+                    <div class="form-group">
+
+                        <label for="area">
+                            Select Area <span>*</span>
+                        </label>
+
+                        <select id="area" required>
+                            <option value="">
+                                Select Your Area
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <!-- PICKUP ADDRESS -->
+                    <div class="form-group">
+
+                        <label for="pickupAddress">
+                            Complete Pickup Address
+                            <span>*</span>
+                        </label>
+
+                        <textarea
+                            id="pickupAddress"
+                            rows="4"
+                            maxlength="255"
+                            placeholder="Enter house number, street, landmark and complete pickup address..."
+                            required></textarea>
+
+                        <small>
+                            Provide an accurate address so
+                            the collection team can locate
+                            the waste.
+                        </small>
+
+                    </div>
+
+
+                    <div class="location-note">
+                        <span>ⓘ</span>
+                        Please ensure that the waste will be
+                        accessible at the pickup location.
+                    </div>
+
+                </section>
+
+
+                <div class="form-divider"></div>
+
+
+                <!-- SUCCESS / ERROR MESSAGE -->
+                <div
+                    id="messageBox"
+                    class="message-box"
+                    role="status"
+                    aria-live="polite">
+                </div>
+
+
+                <!-- FORM FOOTER -->
+                <div class="form-footer">
+
+                    <p>
+                        Your request will be submitted
+                        with Pending status for further review.
+                    </p>
+
+                    <div class="form-buttons">
+
+                        <button
+                            type="reset"
+                            id="resetBtn"
+                            class="btn-reset">
+                            Reset
+                        </button>
+
+                        <button
+                            type="submit"
+                            id="submitBtn"
+                            class="btn-submit">
+                            Submit Pickup Request
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- MY BULK PICKUP REQUESTS -->
+        <section
+            class="pickup-history form-card"
+            id="pickupHistory">
+
+            <div class="form-heading">
+
+                <div>
+                    <h2>My Bulk Pickup Requests</h2>
+
+                    <p>
+                        View all your submitted bulk pickup
+                        requests and track their current status.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="refreshRequestsBtn"
+                    class="btn-reset">
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <!-- REQUEST STATISTICS -->
+            <div class="pickup-stats">
+
+                <!-- TOTAL REQUESTS -->
+                <div class="pickup-stat">
+
+                    <p>Total Requests</p>
+
+                    <h3 id="totalPickupRequests">
+                        0
+                    </h3>
+
+                </div>
+
+
+                <!-- PENDING REQUESTS -->
+                <div class="pickup-stat">
+
+                    <p>Pending Requests</p>
+
+                    <h3 id="pendingPickupRequests">
+                        0
+                    </h3>
+
+                </div>
+
+
+                <!-- COMPLETED REQUESTS -->
+                <div class="pickup-stat">
+
+                    <p>Completed Requests</p>
+
+                    <h3 id="completedPickupRequests">
+                        0
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <!-- REQUEST HISTORY TABLE -->
+            <div class="pickup-table-wrapper">
+
+                <table class="pickup-table">
+
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Preferred Pickup Date</th>
+                            <th>Quantity (kg)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="pickupRequestsTable">
+
+                        <tr>
+                            <td colspan="4">
+                                Loading your bulk pickup requests...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- REQUEST HISTORY MESSAGE -->
+            <p
+                id="pickupHistoryMessage"
+                class="pickup-history-message"
+                role="status"
+                aria-live="polite">
+            </p>
+
+        </section>
+
+
+        <!-- HELP CARD -->
+        <section class="help-card">
+
+            <div class="help-icon" aria-hidden="true">
+                ♻
+            </div>
+
+            <div>
+
+                <h3>Help Keep Our City Clean</h3>
+
+                <p>
+                    Use this service for larger amounts
+                    of waste. For waste dumping or
+                    cleanliness complaints, please use
+                    the Report Waste page.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        &copy; 2026 E-Safai Smart City Waste Management System
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="js/bulk-pickup.js"></script>
+
+</body>
+</html>

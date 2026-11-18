@@ -3,11 +3,11 @@ package mypackage.model;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Column;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -25,36 +25,30 @@ public class Area {
     @Column(name = "area_name", length = 100, nullable = false)
     private String areaName;
 
-    @Column(name = "ward_number", length = 20, unique = true)
+    @Column(name = "ward_number", length = 20,
+            nullable = false, unique = true)
     private String wardNumber;
 
     @Column(name = "city", length = 100, nullable = false)
     private String city;
 
-
-    // 1. Area - Complaint
+    // Area - Complaint
     @OneToMany(mappedBy = "area")
     @JsonIgnore
     private Set<Complaint> complaints;
 
-
-    // 2. Area - CollectionSchedule
+    // Area - CollectionSchedule
     @OneToMany(mappedBy = "area")
     @JsonIgnore
     private Set<CollectionSchedule> collectionSchedules;
 
-
-    // 3. Area - BulkPickupRequest
+    // Area - BulkPickupRequest
     @OneToMany(mappedBy = "area")
     @JsonIgnore
     private Set<BulkPickupRequest> bulkPickupRequests;
 
-
     public Area() {
     }
-
-
-    // Getters and Setters
 
     public Long getAreaId() {
         return areaId;
@@ -100,7 +94,8 @@ public class Area {
         return collectionSchedules;
     }
 
-    public void setCollectionSchedules(Set<CollectionSchedule> collectionSchedules) {
+    public void setCollectionSchedules(
+            Set<CollectionSchedule> collectionSchedules) {
         this.collectionSchedules = collectionSchedules;
     }
 
@@ -108,7 +103,8 @@ public class Area {
         return bulkPickupRequests;
     }
 
-    public void setBulkPickupRequests(Set<BulkPickupRequest> bulkPickupRequests) {
+    public void setBulkPickupRequests(
+            Set<BulkPickupRequest> bulkPickupRequests) {
         this.bulkPickupRequests = bulkPickupRequests;
     }
 }

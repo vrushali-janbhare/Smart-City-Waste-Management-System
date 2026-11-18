@@ -4,15 +4,7 @@ package mypackage.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.FetchType;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,21 +17,18 @@ public class BulkPickupRequest {
     @Column(name = "request_id")
     private Long requestId;
 
- // Many requests can belong to one user
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 
-    // Many requests can belong to one area
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "area_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "area_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Area area;
 
-    // Many requests can belong to one waste category
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private WasteCategory category;
 
@@ -49,14 +38,14 @@ public class BulkPickupRequest {
     @Column(name = "pickup_address", nullable = false, length = 255)
     private String pickupAddress;
 
-    @Column(name = "estimated_quantity_kg", nullable = false, precision = 10, scale = 2)
+    @Column(name = "estimated_quantity_kg",
+            nullable = false, precision = 10, scale = 2)
     private BigDecimal estimatedQuantityKg;
 
     @Column(name = "request_status", nullable = false, length = 30)
     private String requestStatus;
 
-
-    // Getters and Setters
+    // Getters and setters
 
     public Long getRequestId() {
         return requestId;

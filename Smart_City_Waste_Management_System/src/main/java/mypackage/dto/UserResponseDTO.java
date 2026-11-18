@@ -8,19 +8,23 @@ public class UserResponseDTO {
     private String email;
     private String phoneNumber;
     private String address;
-
+    private String roleName; // NEW FIELD
 
     // Constructor
     public UserResponseDTO(Long userId, String fullName,
-            String email, String phoneNumber, String address) {
+            String email, String phoneNumber,
+            String address, String roleName) {
 
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.roleName = roleName;
     }
 
+    public UserResponseDTO() {
+    }
 
     // Getters and Setters
 
@@ -63,7 +67,14 @@ public class UserResponseDTO {
     public void setAddress(String address) {
         this.address = address;
     }
-    public UserResponseDTO() {
 
+    // NEW Getter and Setter
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

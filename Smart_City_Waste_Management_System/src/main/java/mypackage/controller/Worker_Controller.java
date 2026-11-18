@@ -3,11 +3,16 @@ package mypackage.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import mypackage.model.Worker;
+import mypackage.dto.WorkerRegistrationDTO;
+import mypackage.dto.WorkerResponseDTO;
+import mypackage.dto.WorkerUpdateDTO;
 import mypackage.service.Worker_Service;
 
 @RestController
@@ -17,53 +22,165 @@ public class Worker_Controller {
     @Autowired
     private Worker_Service workerService;
 
-    // Insert new worker
-    @PostMapping
-    public Worker saveWorker(@RequestBody Worker worker) {
-        return workerService.saveWorker(worker);
+
+    // ==========================================
+    // CHECK ADMIN AUTHORIZATION
+    // ==========================================
+
+    private ResponseEntity<?> checkAdmin(HttpSession session) {
+
+        Object userId = session.getAttribute("loggedInUserId");
+        Object role = session.getAttribute("loggedInUserRole");
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Please login first");
+        }
+
+        if (!"ADMIN".equals(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Access denied. ADMIN only");
+        }
+
+        return null;
     }
 
-    // Get all workers
+
+    // ==========================================
+    // 1. REGISTER WORKER - ADMIN ONLY
+    // ==========================================
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerWorker(
+            @RequestBody WorkerRegistrationDTO request,
+            HttpSession session) {
+
+        ResponseEntity<?> error = checkAdmin(session);
+
+        if (error != null) {
+            return error;
+        }
+
+        try {
+
+            WorkerResponseDTO savedWorker =
+                    workerService.registerWorkerWithDetails(request);
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(savedWorker);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+
+        } catch (IllegalStateException e) {
+
+            return ResponseEntity.status(
+                    HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
+    }
+
+
+    // ==========================================
+    // 2. GET ALL WORKERS - ADMIN ONLY
+    // ==========================================
+
     @GetMapping
-    public List<Worker> getAllWorkers() {
-        return workerService.getAllWorkers();
+    public ResponseEntity<?> getAllWorkers(HttpSession session) {
+
+        ResponseEntity<?> error = checkAdmin(session);
+
+        if (error != null) {
+            return error;
+        }
+
+        List<WorkerResponseDTO> workers =
+                workerService.getAllWorkerDetails();
+
+        return ResponseEntity.ok(workers);
     }
 
-    // Get worker by ID
-    @GetMapping("/{workerId}")
-    public ResponseEntity<Worker> getWorkerById(
-            @PathVariable Long workerId) {
 
-        return workerService.getWorkerById(workerId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    // ==========================================
+    // 3. GET WORKER BY ID - ADMIN ONLY
+    // ==========================================
 
-    // Update worker by ID
-    @PutMapping("/{workerId}")
-    public ResponseEntity<Worker> updateWorker(
+    @GetMapping("/{workerId:\\d+}")
+    public ResponseEntity<?> getWorkerById(
             @PathVariable Long workerId,
-            @RequestBody Worker worker) {
+            HttpSession session) {
 
-        return workerService.getWorkerById(workerId)
-                .map(existingWorker -> {
-                    worker.setWorkerId(workerId);
-                    return ResponseEntity.ok(
-                            workerService.saveWorker(worker));
-                })
-                .orElse(ResponseEntity.notFound().build());
+        ResponseEntity<?> error = checkAdmin(session);
+
+        if (error != null) {
+            return error;
+        }
+
+        return workerService.getWorkerDetailsById(workerId)
+                .map(worker -> ResponseEntity.ok((Object) worker))
+                .orElseGet(() -> ResponseEntity.status(
+                        HttpStatus.NOT_FOUND)
+                        .body("Worker not found"));
     }
 
-    // Delete worker by ID
-    @DeleteMapping("/{workerId}")
-    public ResponseEntity<Void> deleteWorker(
-            @PathVariable Long workerId) {
 
-        return workerService.getWorkerById(workerId)
-                .map(existingWorker -> {
-                    workerService.deleteWorker(workerId);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+    // ==========================================
+    // 4. UPDATE WORKER - ADMIN ONLY
+    // ==========================================
+
+    @PutMapping("/{workerId:\\d+}")
+    public ResponseEntity<?> updateWorker(
+            @PathVariable Long workerId,
+            @RequestBody WorkerUpdateDTO request,
+            HttpSession session) {
+
+        ResponseEntity<?> error = checkAdmin(session);
+
+        if (error != null) {
+            return error;
+        }
+
+        try {
+
+            WorkerResponseDTO updatedWorker =
+                    workerService.updateWorker(workerId, request);
+
+            return ResponseEntity.ok(updatedWorker);
+
+        } catch (IllegalArgumentException e) {
+
+            if ("Worker not found".equals(e.getMessage())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(e.getMessage());
+            }
+
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+
+    // ==========================================
+    // 5. DELETE WORKER - ADMIN ONLY
+    // ==========================================
+
+    // Deletion is disabled to protect linked
+    // complaints and collection records.
+
+    @DeleteMapping("/{workerId:\\d+}")
+    public ResponseEntity<?> deleteWorker(
+            @PathVariable Long workerId,
+            HttpSession session) {
+
+        ResponseEntity<?> error = checkAdmin(session);
+
+        if (error != null) {
+            return error;
+        }
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body("Worker deletion is not implemented yet");
     }
 }

@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Complaints | E-Safai</title>
+
+    <link rel="stylesheet" href="css/my-complaints.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="topbar">
+        <a href="user-dashboard.html" class="brand">
+            <span class="brand-icon">♻</span>
+            <span>E-Safai</span>
+        </a>
+
+        <nav class="top-navigation">
+            <a href="user-dashboard.html">Dashboard</a>
+            <a href="report-waste.html">Report Waste</a>
+            <a href="my-complaints.html" class="active">My Complaints</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-container">
+
+        <!-- Page Heading -->
+        <section class="page-heading">
+            <div>
+                <p class="eyebrow">CITIZEN SERVICES</p>
+                <h1>My Complaints</h1>
+                <p class="subtitle">
+                    View and track the status of your reported waste complaints.
+                </p>
+            </div>
+
+            <a href="report-waste.html" class="report-btn">
+                + Report New Waste
+            </a>
+        </section>
+
+        <!-- Summary Cards -->
+        <section class="summary-grid">
+
+            <div class="summary-card">
+                <div class="summary-icon total-icon">📋</div>
+                <div>
+                    <p>Total Complaints</p>
+                    <h2 id="totalComplaints">0</h2>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon pending-icon">⏳</div>
+                <div>
+                    <p>Pending</p>
+                    <h2 id="pendingComplaints">0</h2>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon progress-icon">🔄</div>
+                <div>
+                    <p>In Progress</p>
+                    <h2 id="progressComplaints">0</h2>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon resolved-icon">✓</div>
+                <div>
+                    <p>Resolved</p>
+                    <h2 id="resolvedComplaints">0</h2>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Complaints Section -->
+        <section class="complaints-card">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Complaint History</h2>
+                    <p>All complaints submitted from your account</p>
+                </div>
+
+                <button type="button" id="refreshBtn" class="refresh-btn">
+                    ↻ Refresh
+                </button>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="filter-section">
+
+                <div class="search-box">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search by complaint ID or description..."
+                    >
+                </div>
+
+                <select id="statusFilter">
+                    <option value="ALL">All Status</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="ASSIGNED">Assigned</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="RESOLVED">Resolved</option>
+                    <option value="REJECTED">Rejected</option>
+                </select>
+
+            </div>
+
+            <!-- Message -->
+            <div id="messageBox" class="message-box"></div>
+
+            <!-- Complaints Table -->
+            <div class="table-container">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Complaint ID</th>
+                            <th>Waste Category</th>
+                            <th>Description</th>
+                            <th>Reported Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="complaintsTableBody">
+                        <tr>
+                            <td colspan="6" class="loading-cell">
+                                Loading your complaints...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon">📋</div>
+                <h3>No Complaints Found</h3>
+                <p>
+                    You have not submitted any complaints yet.
+                    Report waste to help keep your city clean.
+                </p>
+                <a href="report-waste.html" class="report-btn">
+                    Report Waste
+                </a>
+            </div>
+
+        </section>
+
+        <!-- Information Card -->
+        <section class="info-card">
+            <div class="info-icon">ℹ</div>
+            <div>
+                <h3>About Complaint Status</h3>
+                <p>
+                    <strong>Pending:</strong> Your complaint has been submitted.
+                    <strong>Assigned:</strong> A worker has been assigned.
+                    <strong>In Progress:</strong> Waste collection or resolution work is ongoing.
+                    <strong>Resolved:</strong> Your complaint has been completed.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 E-Safai Smart City Waste Management System. All rights reserved.</p>
+    </footer>
+
+    <script src="js/my-complaints.js"></script>
+
+</body>
+</html>

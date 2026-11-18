@@ -4,11 +4,11 @@ package mypackage.model;
 import java.math.BigDecimal;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Column;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -23,28 +23,43 @@ public class Vehicle {
     @Column(name = "vehicle_id")
     private Long vehicleId;
 
-    @Column(name = "vehicle_number", length = 30, nullable = false, unique = true)
+    @Column(
+        name = "vehicle_number",
+        length = 30,
+        nullable = false,
+        unique = true
+    )
     private String vehicleNumber;
 
-    @Column(name = "vehicle_type", length = 50, nullable = false)
+    @Column(
+        name = "vehicle_type",
+        length = 50,
+        nullable = false
+    )
     private String vehicleType;
 
-    @Column(name = "capacity_kg", precision = 10, scale = 2, nullable = false)
+    @Column(
+        name = "capacity_kg",
+        precision = 10,
+        scale = 2,
+        nullable = false
+    )
     private BigDecimal capacityKg;
 
-    @Column(name = "vehicle_status", length = 30, nullable = false)
-    private String vehicleStatus;
+    @Column(
+        name = "vehicle_status",
+        length = 30,
+        nullable = false
+    )
+    private String vehicleStatus = "AVAILABLE";
 
-
-    // 1. Vehicle - CollectionSchedule
+    // One vehicle can have many collection schedules.
     @OneToMany(mappedBy = "vehicle")
     @JsonIgnore
     private Set<CollectionSchedule> collectionSchedules;
 
-
     public Vehicle() {
     }
-
 
     // Getters and Setters
 
@@ -92,7 +107,8 @@ public class Vehicle {
         return collectionSchedules;
     }
 
-    public void setCollectionSchedules(Set<CollectionSchedule> collectionSchedules) {
+    public void setCollectionSchedules(
+            Set<CollectionSchedule> collectionSchedules) {
         this.collectionSchedules = collectionSchedules;
     }
 }

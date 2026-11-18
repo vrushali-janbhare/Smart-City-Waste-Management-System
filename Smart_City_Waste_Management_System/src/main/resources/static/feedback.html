@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback | E-Safai</title>
+    <link rel="stylesheet" href="css/feedback.css">
+</head>
+<body>
+
+<header class="topbar">
+    <a href="user-dashboard.html" class="brand">
+        <span class="brand-icon">♻</span>
+        E-Safai
+    </a>
+
+    <nav class="nav-links">
+        <a href="user-dashboard.html">Dashboard</a>
+        <a href="my-complaints.html">My Complaints</a>
+        <a href="feedback.html" class="active">Feedback</a>
+        <a href="my-profile.html">My Profile</a>
+    </nav>
+
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+</header>
+
+<main class="container">
+
+    <section class="page-heading">
+        <div>
+            <span class="eyebrow">CITIZEN SERVICES</span>
+            <h1>Share Your Feedback</h1>
+            <p>
+                Help us improve waste management services
+                by sharing your experience.
+            </p>
+        </div>
+        <div class="heading-icon">⭐</div>
+    </section>
+
+    <div id="messageBox" class="message" hidden></div>
+
+    <section class="stats-grid">
+        <article class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div>
+                <p>Resolved Complaints</p>
+                <h2 id="resolvedCount">0</h2>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div>
+                <p>Feedback Submitted</p>
+                <h2 id="feedbackCount">0</h2>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-icon">💬</div>
+            <div>
+                <p>Awaiting Feedback</p>
+                <h2 id="pendingCount">0</h2>
+            </div>
+        </article>
+    </section>
+
+    <div class="content-grid">
+
+        <section class="panel">
+            <div class="panel-heading">
+                <span class="panel-icon">✍️</span>
+                <div>
+                    <h2>Submit Feedback</h2>
+                    <p>Rate your resolved complaint experience.</p>
+                </div>
+            </div>
+
+            <form id="feedbackForm">
+
+                <div class="form-group">
+                    <label for="complaintId">
+                        Select Resolved Complaint
+                    </label>
+
+                    <select id="complaintId" required>
+                        <option value="">
+                            Loading complaints...
+                        </option>
+                    </select>
+
+                    <small>
+                        Only resolved complaints without feedback
+                        are available.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Rating</label>
+
+                    <div id="starRating"
+                         class="star-rating"
+                         role="group"
+                         aria-label="Choose a rating from 1 to 5">
+
+                        <button type="button"
+                                class="star"
+                                data-rating="1"
+                                aria-label="1 star">★</button>
+
+                        <button type="button"
+                                class="star"
+                                data-rating="2"
+                                aria-label="2 stars">★</button>
+
+                        <button type="button"
+                                class="star"
+                                data-rating="3"
+                                aria-label="3 stars">★</button>
+
+                        <button type="button"
+                                class="star"
+                                data-rating="4"
+                                aria-label="4 stars">★</button>
+
+                        <button type="button"
+                                class="star"
+                                data-rating="5"
+                                aria-label="5 stars">★</button>
+                    </div>
+
+                    <p id="ratingText" class="rating-text">
+                        Select your rating
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="comments">
+                        Additional Comments (Optional)
+                    </label>
+
+                    <textarea
+                        id="comments"
+                        rows="5"
+                        maxlength="1000"
+                        placeholder="Tell us about your experience..."></textarea>
+
+                    <small>
+                        Maximum 1000 characters.
+                    </small>
+                </div>
+
+                <button type="submit"
+                        id="submitBtn"
+                        class="submit-btn"
+                        disabled>
+                    Submit Feedback
+                </button>
+
+            </form>
+        </section>
+
+        <section class="panel history-panel">
+            <div class="panel-heading">
+                <span class="panel-icon">📜</span>
+                <div>
+                    <h2>My Feedback History</h2>
+                    <p>Review your submitted feedback.</p>
+                </div>
+            </div>
+
+            <div id="feedbackHistory" class="history-list">
+                <div class="empty-state">
+                    Loading feedback history...
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</main>
+
+<footer class="footer">
+    © 2026 E-Safai | Smart City Waste Management System
+</footer>
+
+<script src="js/feedback.js"></script>
+
+</body>
+</html>

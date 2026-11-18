@@ -17,9 +17,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import mypackage.enums.ComplaintStatus;
 
 @Entity
 @Table(name = "complaints")
@@ -48,6 +52,13 @@ public class Complaint {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private WasteCategory category;
 
+    // NEW: Many complaints can be assigned to one worker
+    // worker_id is nullable until ADMIN assigns a worker
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "worker_id", nullable = true)
+    @JsonIgnore
+    private Worker worker;
+
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
@@ -60,15 +71,16 @@ public class Complaint {
     @Column(name = "longitude", precision = 10, scale = 7)
     private BigDecimal longitude;
 
+    // Complaint current status
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 30)
-    private String status;
+    private ComplaintStatus status;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "resolved_at")
     private LocalDateTime resolvedAt;
-
 
     // One complaint can have many images
     @OneToMany(mappedBy = "complaint")
@@ -80,35 +92,23 @@ public class Complaint {
     @JsonIgnore
     private Set<ComplaintStatusHistory> statusHistories;
 
-    // One complaint can have many notifications
-    @OneToMany(mappedBy = "complaint")
-    @JsonIgnore
-    private Set<Notification> notifications;
-
     // One complaint can have one feedback
     @OneToOne(mappedBy = "complaint")
     @JsonIgnore
     private Feedback feedback;
 
-    // One complaint can have many fines
-    @OneToMany(mappedBy = "complaint")
-    @JsonIgnore
-    private Set<Fine> fines;
-
-    // One complaint can have many AI classifications
-    @OneToMany(mappedBy = "complaint")
-    @JsonIgnore
-    private Set<AiClassification> aiClassifications;
-
-
-    // Automatically set creation date and time before inserting
+    // Automatically set values before inserting a new complaint
     @PrePersist
-    public void setCreatedAtAutomatically() {
+    public void setDefaultsBeforeInsert() {
+
         if (this.createdAt == null) {
             this.createdAt = LocalDateTime.now();
         }
-    }
 
+        if (this.status == null) {
+            this.status = ComplaintStatus.PENDING;
+        }
+    }
 
     // Getters and Setters
 
@@ -144,6 +144,39 @@ public class Complaint {
         this.category = category;
     }
 
+    // NEW: Worker getters and setters
+    public Worker getWorker() {
+        return worker;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
+    }
+
+    // Expose only the waste category name in JSON
+    @JsonProperty("categoryName")
+    public String getCategoryName() {
+        return category != null
+                ? category.getCategoryName()
+                : null;
+    }
+
+    // Expose area ID in JSON
+    @JsonProperty("areaId")
+    public Long getAreaId() {
+        return area != null
+                ? area.getAreaId()
+                : null;
+    }
+
+    // Expose area name in JSON
+    @JsonProperty("areaName")
+    public String getAreaName() {
+        return area != null
+                ? area.getAreaName()
+                : null;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -176,11 +209,11 @@ public class Complaint {
         this.longitude = longitude;
     }
 
-    public String getStatus() {
+    public ComplaintStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ComplaintStatus status) {
         this.status = status;
     }
 
@@ -216,35 +249,11 @@ public class Complaint {
         this.statusHistories = statusHistories;
     }
 
-    public Set<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
     public Feedback getFeedback() {
         return feedback;
     }
 
     public void setFeedback(Feedback feedback) {
         this.feedback = feedback;
-    }
-
-    public Set<Fine> getFines() {
-        return fines;
-    }
-
-    public void setFines(Set<Fine> fines) {
-        this.fines = fines;
-    }
-
-    public Set<AiClassification> getAiClassifications() {
-        return aiClassifications;
-    }
-
-    public void setAiClassifications(Set<AiClassification> aiClassifications) {
-        this.aiClassifications = aiClassifications;
     }
 }

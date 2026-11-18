@@ -13,8 +13,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.PrePersist;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import mypackage.enums.ComplaintStatus;
 
 @Entity
 @Table(name = "complaint_status_history")
@@ -37,24 +41,31 @@ public class ComplaintStatusHistory {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User changedBy;
 
+    // Previous complaint status
+    @Enumerated(EnumType.STRING)
     @Column(name = "old_status", length = 30)
-    private String oldStatus;
+    private ComplaintStatus oldStatus;
 
+    // New complaint status
+    @Enumerated(EnumType.STRING)
     @Column(name = "new_status", nullable = false, length = 30)
-    private String newStatus;
+    private ComplaintStatus newStatus;
 
+    // NEW: Reason or remarks for changing status
+    @Column(name = "remarks", length = 255)
+    private String remarks;
+
+    // Automatically saved date and time
     @Column(name = "changed_at", nullable = false)
     private LocalDateTime changedAt;
 
-
-    // Automatically set date and time before inserting
     @PrePersist
     public void setChangedAtAutomatically() {
+
         if (this.changedAt == null) {
             this.changedAt = LocalDateTime.now();
         }
     }
-
 
     // Getters and Setters
 
@@ -82,20 +93,29 @@ public class ComplaintStatusHistory {
         this.changedBy = changedBy;
     }
 
-    public String getOldStatus() {
+    public ComplaintStatus getOldStatus() {
         return oldStatus;
     }
 
-    public void setOldStatus(String oldStatus) {
+    public void setOldStatus(ComplaintStatus oldStatus) {
         this.oldStatus = oldStatus;
     }
 
-    public String getNewStatus() {
+    public ComplaintStatus getNewStatus() {
         return newStatus;
     }
 
-    public void setNewStatus(String newStatus) {
+    public void setNewStatus(ComplaintStatus newStatus) {
         this.newStatus = newStatus;
+    }
+
+    // NEW: Remarks getter and setter
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public LocalDateTime getChangedAt() {

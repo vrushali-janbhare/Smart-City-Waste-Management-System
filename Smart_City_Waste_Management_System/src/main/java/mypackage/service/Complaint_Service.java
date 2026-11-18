@@ -16,23 +16,29 @@ public class Complaint_Service {
     @Autowired
     private Complaint_Repository complaintRepository;
 
-    // Insert or update complaint
+    // 1. Insert or update complaint
     public Complaint saveComplaint(Complaint complaint) {
         return complaintRepository.save(complaint);
     }
 
-    // Get all complaints
+    // 2. Get all complaints
     public List<Complaint> getAllComplaints() {
         return complaintRepository.findAll();
     }
 
-    // Get complaint by ID
+    // 3. Get complaint by ID
     public Optional<Complaint> getComplaintById(Long complaintId) {
         return complaintRepository.findById(complaintId);
     }
 
-    // Delete complaint by ID
+    // 4. Delete complaint by ID
     public void deleteComplaint(Long complaintId) {
         complaintRepository.deleteById(complaintId);
     }
+
+    // 5. Get complaints by user ID
+    public List<Complaint> getComplaintsByUserId(Long userId) {
+        return complaintRepository.findByUser_UserId(userId);
+    }
+
 }

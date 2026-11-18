@@ -4,12 +4,12 @@ package mypackage.model;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,34 +31,23 @@ public class WasteCategory {
     @Column(name = "is_hazardous", nullable = false)
     private boolean isHazardous;
 
-
-    // 1. WasteCategory - Complaint
+    // One waste category can have many complaints
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private Set<Complaint> complaints;
 
-
-    // 2. WasteCategory - CollectionRecord
+    // One waste category can have many collection records
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private Set<CollectionRecord> collectionRecords;
 
-
-    // 3. WasteCategory - BulkPickupRequest
+    // One waste category can have many bulk pickup requests
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private Set<BulkPickupRequest> bulkPickupRequests;
 
-
-    // 4. WasteCategory - AiClassification
-    @OneToMany(mappedBy = "category")
-    @JsonIgnore
-    private Set<AiClassification> aiClassifications;
-
-
     public WasteCategory() {
     }
-
 
     // Getters and Setters
 
@@ -91,7 +80,7 @@ public class WasteCategory {
     }
 
     public void setHazardous(boolean hazardous) {
-        isHazardous = hazardous;
+        this.isHazardous = hazardous;
     }
 
     public Set<Complaint> getComplaints() {
@@ -116,13 +105,5 @@ public class WasteCategory {
 
     public void setBulkPickupRequests(Set<BulkPickupRequest> bulkPickupRequests) {
         this.bulkPickupRequests = bulkPickupRequests;
-    }
-
-    public Set<AiClassification> getAiClassifications() {
-        return aiClassifications;
-    }
-
-    public void setAiClassifications(Set<AiClassification> aiClassifications) {
-        this.aiClassifications = aiClassifications;
     }
 }

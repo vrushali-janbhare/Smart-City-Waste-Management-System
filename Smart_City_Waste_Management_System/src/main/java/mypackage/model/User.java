@@ -60,28 +60,16 @@ public class User {
     private Set<Complaint> complaints;
 
 
-    // 3. User - Notification
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore
-    private Set<Notification> notifications;
-
-
-    // 4. User - BulkPickupRequest
+    // 3. User - BulkPickupRequest
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private Set<BulkPickupRequest> bulkPickupRequests;
 
 
-    // 5. User - ComplaintStatusHistory
+    // 4. User - ComplaintStatusHistory
     @OneToMany(mappedBy = "changedBy")
     @JsonIgnore
     private Set<ComplaintStatusHistory> statusHistories;
-
-
-    // 6. User - Fine
-    @OneToMany(mappedBy = "issuedBy")
-    @JsonIgnore
-    private Set<Fine> fines;
 
 
     public User() {
@@ -162,14 +150,6 @@ public class User {
         this.complaints = complaints;
     }
 
-    public Set<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(Set<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
     public Set<BulkPickupRequest> getBulkPickupRequests() {
         return bulkPickupRequests;
     }
@@ -184,13 +164,5 @@ public class User {
 
     public void setStatusHistories(Set<ComplaintStatusHistory> statusHistories) {
         this.statusHistories = statusHistories;
-    }
-
-    public Set<Fine> getFines() {
-        return fines;
-    }
-
-    public void setFines(Set<Fine> fines) {
-        this.fines = fines;
     }
 }

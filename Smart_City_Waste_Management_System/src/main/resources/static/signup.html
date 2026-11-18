@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign Up | E-Safai</title>
+
+    <link rel="stylesheet" href="css/signup.css">
+</head>
+
+<body>
+
+    <main class="signup-container">
+
+        <!-- LEFT SIDE -->
+        <section class="signup-left">
+
+            <div class="brand">
+                <span class="brand-icon">♻</span>
+                <span>E-<span class="brand-highlight">Safai</span></span>
+            </div>
+
+            <div class="welcome-content">
+
+                <p class="welcome-label">
+                    JOIN THE CLEAN CITY MOVEMENT
+                </p>
+
+                <h1>Create Your Account</h1>
+
+                <p>
+                    Become a part of E-Safai and help build a cleaner,
+                    greener and smarter city.
+                </p>
+
+                <div class="welcome-note">
+                    <span>♻</span>
+                    <p>
+                        Small actions today, cleaner cities tomorrow.
+                    </p>
+                </div>
+
+            </div>
+
+            <p class="copyright">
+                © 2026 E-Safai. All rights reserved.
+            </p>
+
+        </section>
+
+
+        <!-- RIGHT SIDE -->
+        <section class="signup-right">
+
+            <div class="form-heading">
+
+                <h2>Sign Up</h2>
+
+                <p>
+                    Create your account to get started.
+                </p>
+
+            </div>
+
+
+            <!-- SIGNUP FORM -->
+            <form id="signupForm">
+
+                <div class="form-group">
+
+                    <label for="fullName">Full Name</label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        placeholder="Enter your full name"
+                        maxlength="100"
+                        autocomplete="name"
+                        required>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="email">Email Address</label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            maxlength="150"
+                            autocomplete="email"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="phoneNumber">Phone Number</label>
+
+                        <input
+                            type="tel"
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            placeholder="Enter phone number"
+                            maxlength="15"
+                            pattern="[0-9]{10}"
+                            title="Enter a valid 10-digit phone number"
+                            autocomplete="tel"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="address">Address</label>
+
+                    <textarea
+                        id="address"
+                        name="address"
+                        rows="2"
+                        maxlength="255"
+                        placeholder="Enter your address"
+                        autocomplete="street-address"
+                        required></textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="password">Password</label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create password"
+                            minlength="8"
+                            autocomplete="new-password"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            placeholder="Confirm password"
+                            minlength="8"
+                            autocomplete="new-password"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+                <p
+                    id="message"
+                    class="message"
+                    role="status"
+                    aria-live="polite">
+                </p>
+
+
+                <!-- SUBMIT BUTTON -->
+                <button type="submit" id="signupButton">
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <p class="login-link">
+
+                Already have an account?
+
+                <a href="login.html">Login</a>
+
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/signup.js"></script>
+
+</body>
+
+</html>

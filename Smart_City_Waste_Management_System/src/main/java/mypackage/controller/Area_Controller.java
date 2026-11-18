@@ -1,9 +1,15 @@
 
 package mypackage.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,16 +23,62 @@ public class Area_Controller {
     @Autowired
     private Area_Service areaService;
 
-    // Insert new area
+    // Check admin session
+    private boolean isAdmin(HttpSession session) {
+
+        Object userId =
+                session.getAttribute("loggedInUserId");
+
+        Object role =
+                session.getAttribute("loggedInUserRole");
+
+        return userId != null
+                && role != null
+                && "ADMIN".equalsIgnoreCase(role.toString());
+    }
+
+    // Error response
+    private Map<String, String> errorMessage(String message) {
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", message);
+
+        return response;
+    }
+
+    // Add new area - Admin only
     @PostMapping
-    public Area saveArea(@RequestBody Area area) {
-        return areaService.saveArea(area);
+    public ResponseEntity<?> saveArea(
+            @RequestBody Area area,
+            HttpSession session) {
+
+        if (!isAdmin(session)) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(errorMessage("Admin access required."));
+        }
+
+        try {
+
+            Area savedArea = areaService.saveArea(area);
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(savedArea);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(errorMessage(e.getMessage()));
+        }
     }
 
     // Get all areas
     @GetMapping
-    public List<Area> getAllAreas() {
-        return areaService.getAllAreas();
+    public ResponseEntity<List<Area>> getAllAreas() {
+
+        return ResponseEntity.ok(areaService.getAllAreas());
     }
 
     // Get area by ID
@@ -39,31 +91,56 @@ public class Area_Controller {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Update area by ID
+    // Update area - Admin only
     @PutMapping("/{areaId}")
-    public ResponseEntity<Area> updateArea(
+    public ResponseEntity<?> updateArea(
             @PathVariable Long areaId,
-            @RequestBody Area area) {
+            @RequestBody Area area,
+            HttpSession session) {
 
-        return areaService.getAreaById(areaId)
-                .map(existingArea -> {
-                    area.setAreaId(areaId);
-                    return ResponseEntity.ok(
-                            areaService.saveArea(area));
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!isAdmin(session)) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(errorMessage("Admin access required."));
+        }
+
+        try {
+
+            Optional<Area> updated =
+                    areaService.updateArea(areaId, area);
+
+            if (!updated.isPresent()) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(errorMessage("Area not found."));
+            }
+
+            return ResponseEntity.ok(updated.get());
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(errorMessage(e.getMessage()));
+        }
     }
 
-    // Delete area by ID
+    // Delete area - Admin only
+    // Disabled to protect related records.
     @DeleteMapping("/{areaId}")
-    public ResponseEntity<Void> deleteArea(
-            @PathVariable Long areaId) {
+    public ResponseEntity<?> deleteArea(
+            @PathVariable Long areaId,
+            HttpSession session) {
 
-        return areaService.getAreaById(areaId)
-                .map(existingArea -> {
-                    areaService.deleteArea(areaId);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!isAdmin(session)) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(errorMessage("Admin access required."));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(errorMessage(
+                        "Deleting areas is not allowed."));
     }
 }
