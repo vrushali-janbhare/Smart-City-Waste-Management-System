@@ -1715,3 +1715,15 @@ body {
 #contact-messages .contact-message-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .contact-message-text { white-space: pre-wrap; overflow-wrap: anywhere; }
 #contactMessageDetailsModal dd { overflow-wrap: anywhere; }
+
+/* Manage Feedback */
+#feedback .dashboard-panel { min-height: auto; }
+#feedback .stat-card { min-height: 115px; }
+#feedback .table { --bs-table-bg: transparent; --bs-table-hover-bg: #f7fcf9; }
+#feedback .table thead th { background: #f4f9f6; color: #53695d; font-size: 12px; font-weight: 700; padding: 15px; white-space: nowrap; }
+#feedback .table tbody td { padding: 15px; font-size: 13px; vertical-align: middle; border-color: var(--border); }
+#feedback .feedback-comment { min-width: 220px; max-width: 440px; white-space: pre-wrap; overflow-wrap: anywhere; }
+#feedback .feedback-stars { color: #d99a17; white-space: nowrap; letter-spacing: 1px; font-size: 15px; }
+#feedback .feedback-action { white-space: nowrap; }
+#feedback .badge { padding: 7px 10px; border-radius: 20px; }
+#feedback .form-control, #feedback .form-select { min-height: 43px; border-radius: 9px; border: 1px solid var(--border); }

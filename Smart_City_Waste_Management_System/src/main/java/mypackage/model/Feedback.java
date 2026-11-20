@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
+import javax.persistence.PrePersist;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,10 +23,13 @@ public class Feedback {
     @Column(name = "feedback_id")
     private Long feedbackId;
 
-    // One feedback belongs to one complaint
     // One complaint can have only one feedback
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "complaint_id", nullable = false, unique = true)
+    @JoinColumn(
+        name = "complaint_id",
+        nullable = false,
+        unique = true
+    )
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Complaint complaint;
 
@@ -34,6 +38,17 @@ public class Feedback {
 
     @Column(name = "comments", columnDefinition = "TEXT")
     private String comments;
+
+    // Admin controls public visibility
+    @Column(name = "is_public", nullable = false)
+    private Boolean isPublic = false;
+
+    @PrePersist
+    public void onCreate() {
+        if (isPublic == null) {
+            isPublic = false;
+        }
+    }
 
     // Getters and Setters
 
@@ -67,5 +82,13 @@ public class Feedback {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 }

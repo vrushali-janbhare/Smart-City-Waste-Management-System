@@ -26,6 +26,7 @@
 <script defer src="admin-schedules.js"></script>
 <script defer src="admin-bulk-pickups.js"></script>
 <script defer src="admin-contact-messages.js"></script>
+<script defer src="admin-feedback.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="admin-dashboard.css">
@@ -98,6 +99,11 @@
             <a href="#contact-messages" class="nav-link" data-section="contact-messages">
                 <i class="fa-solid fa-envelope"></i>
                 <span>Contact Messages</span>
+            </a>
+
+            <a href="#feedback" class="nav-link" data-section="feedback">
+                <i class="fa-solid fa-star"></i>
+                <span>Manage Feedback</span>
             </a>
 
             <a href="#profile" class="nav-link" data-section="profile">
@@ -927,6 +933,60 @@
                         </table>
                     </div>
                     <p id="contactMessagesResultCount" class="small text-muted mb-0" aria-live="polite"></p>
+                </div>
+            </section>
+
+            <!-- Manage Feedback: ratings, comments and public testimonials -->
+            <section id="feedback" class="dashboard-section">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                    <div class="section-heading mb-0">
+                        <h2>Manage Feedback</h2>
+                        <p>Review citizen ratings and comments, and choose testimonials for the public homepage.</p>
+                    </div>
+                    <button type="button" id="refreshFeedbackBtn" class="btn btn-outline-success">
+                        <i class="fa-solid fa-rotate me-1"></i> Refresh
+                    </button>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-lg-4"><div class="stat-card"><p>Total Feedback</p><h3 id="feedbackTotalCount">—</h3></div></div>
+                    <div class="col-6 col-lg-4"><div class="stat-card"><p>Average Rating</p><h3 id="feedbackAverageRating">—</h3></div></div>
+                    <div class="col-12 col-lg-4"><div class="stat-card"><p>Public Testimonials</p><h3 id="feedbackPublicCount">—</h3></div></div>
+                </div>
+                <div class="dashboard-panel">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="feedbackSearch" class="form-label">Search Comments</label>
+                            <input type="search" id="feedbackSearch" class="form-control" placeholder="Search feedback ID or comment">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="feedbackRatingFilter" class="form-label">Rating</label>
+                            <select id="feedbackRatingFilter" class="form-select">
+                                <option value="ALL">All ratings</option>
+                                <option value="5">5 stars</option><option value="4">4 stars</option>
+                                <option value="3">3 stars</option><option value="2">2 stars</option>
+                                <option value="1">1 star</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="feedbackVisibilityFilter" class="form-label">Visibility</label>
+                            <select id="feedbackVisibilityFilter" class="form-select">
+                                <option value="ALL">All feedback</option>
+                                <option value="PUBLIC">Public</option>
+                                <option value="PRIVATE">Private</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="feedbackAlert" class="alert d-none" role="alert" aria-live="polite"></div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead><tr><th>ID</th><th>Rating</th><th>Citizen Comment</th><th>Visibility</th><th>Action</th></tr></thead>
+                            <tbody id="feedbackTableBody">
+                                <tr><td colspan="5" class="text-center text-muted py-4">Open Manage Feedback to load records.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="feedbackResultsCount" class="small text-muted mb-0" aria-live="polite"></p>
+                    <p class="small text-muted mt-2 mb-0">Publish comments only with the citizen's permission. Never publish comments containing private information.</p>
                 </div>
             </section>
 

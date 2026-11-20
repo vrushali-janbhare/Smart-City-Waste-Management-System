@@ -67,6 +67,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (sectionId === "citizens") {
             loadCitizens();
         }
+        // Load Manage Feedback
+if (sectionId === "feedback" &&
+    typeof window.loadAdminFeedback === "function") {
+    window.loadAdminFeedback();
+}
     }
 
     navLinks.forEach(link => {
